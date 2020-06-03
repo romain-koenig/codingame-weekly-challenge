@@ -47,16 +47,16 @@ test('Genes A and B gives bloodtype AB', () => {
 
 
 test('Bloodtype A comes from gene A and gene O or twice gene A', () => {
-    expect(bloodtypes.bloodTypeToPossibleGenes('A')).toStrictEqual({ possibleGenes: [['A', 'A'], ['A', 'O']] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('A')).toStrictEqual({ possibleGenes: [['A', 'A'], ['A', 'O']] });
 });
 test('Bloodtype B comes from gene B and gene O or twice gene B', () => {
-    expect(bloodtypes.bloodTypeToPossibleGenes('B')).toStrictEqual({ possibleGenes: [['B', 'B'], ['B', 'O']] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('B')).toStrictEqual({ possibleGenes: [['B', 'B'], ['B', 'O']] });
 });
 test('Bloodtype O comes from gene O twice', () => {
-    expect(bloodtypes.bloodTypeToPossibleGenes('O')).toStrictEqual({ possibleGenes: [['O', 'O']] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('O')).toStrictEqual({ possibleGenes: [['O', 'O']] });
 });
 test('Bloodtype AB comes from gene A and gene B', () => {
-    expect(bloodtypes.bloodTypeToPossibleGenes('AB')).toStrictEqual({ possibleGenes: [['A', 'B']] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('AB')).toStrictEqual({ possibleGenes: [['A', 'B']] });
 });
 
 
@@ -65,23 +65,23 @@ test('Bloodtype AB comes from gene A and gene B', () => {
 
 
 test('Genes + twice gives Rhesus +', () => {
-    expect(bloodtypes.genesToRhesus('+', '+')).toBe('+');
+    expect(bloodtypes.getRhesusFromGenes('+', '+')).toBe('+');
 });
 test('Genes - twice gives Rhesus -', () => {
-    expect(bloodtypes.genesToRhesus('-', '-')).toBe('-');
+    expect(bloodtypes.getRhesusFromGenes('-', '-')).toBe('-');
 });
 test('Genes + and - gives Rhesus +', () => {
-    expect(bloodtypes.genesToRhesus('+', '-')).toBe('+');
+    expect(bloodtypes.getRhesusFromGenes('+', '-')).toBe('+');
 });
 test('Genes - and + gives Rhesus +', () => {
-    expect(bloodtypes.genesToRhesus('-', '+')).toBe('+');
+    expect(bloodtypes.getRhesusFromGenes('-', '+')).toBe('+');
 });
 
 
 
 test('Rhesus - comes from gene - twice', () => {
-    expect(bloodtypes.rhesusToGenes('-')).toStrictEqual({ possibleRhesusGenes: [['-', '-']] });
+    expect(bloodtypes.getPossibleGenesFromRhesus('-')).toStrictEqual({ possibleRhesusGenes: [['-', '-']] });
 });
 test('Rhesus + comes from gene + twice or +/-', () => {
-    expect(bloodtypes.rhesusToGenes('+')).toStrictEqual({ possibleRhesusGenes: [['+', '+'], ['+', '-']] });
+    expect(bloodtypes.getPossibleGenesFromRhesus('+')).toStrictEqual({ possibleRhesusGenes: [['+', '+'], ['+', '-']] });
 });

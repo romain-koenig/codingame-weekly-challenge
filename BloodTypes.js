@@ -1,9 +1,33 @@
 const readline = () => "TEST";
 
-/**
- * Auto-generated code below aims at helping you parse
- * the standard input according to the problem statement.
- **/
+
+// ██╗   ██╗████████╗██╗██╗     ██╗████████╗██╗███████╗███████╗
+// ██║   ██║╚══██╔══╝██║██║     ██║╚══██╔══╝██║██╔════╝██╔════╝
+// ██║   ██║   ██║   ██║██║     ██║   ██║   ██║█████╗  ███████╗
+// ██║   ██║   ██║   ██║██║     ██║   ██║   ██║██╔══╝  ╚════██║
+// ╚██████╔╝   ██║   ██║███████╗██║   ██║   ██║███████╗███████║
+//  ╚═════╝    ╚═╝   ╚═╝╚══════╝╚═╝   ╚═╝   ╚═╝╚══════╝╚══════╝
+
+const getBloodInfos = (blood) => {
+
+    let values = blood.split('');
+    let rhesus = values.pop();
+
+    let bloodInfos = {};
+    bloodInfos.bloodtype = values.join('');
+    bloodInfos.rhesus = rhesus;
+    return bloodInfos;
+}
+exports.getBloodInfos = getBloodInfos;
+
+
+
+// ██████╗ ██╗      ██████╗  ██████╗ ██████╗ ████████╗██╗   ██╗██████╗ ███████╗
+// ██╔══██╗██║     ██╔═══██╗██╔═══██╗██╔══██╗╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔════╝
+// ██████╔╝██║     ██║   ██║██║   ██║██║  ██║   ██║    ╚████╔╝ ██████╔╝█████╗  
+// ██╔══██╗██║     ██║   ██║██║   ██║██║  ██║   ██║     ╚██╔╝  ██╔═══╝ ██╔══╝  
+// ██████╔╝███████╗╚██████╔╝╚██████╔╝██████╔╝   ██║      ██║   ██║     ███████╗
+// ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝    ╚═╝      ╚═╝   ╚═╝     ╚══════╝
 
 
 /**
@@ -36,20 +60,8 @@ const genesToBloodType = (gene1, gene2) => {
 }
 exports.genesToBloodType = genesToBloodType;
 
-const getBloodInfos = (blood) => {
 
-    let values = blood.split('');
-    let rhesus = values.pop();
-
-    let bloodInfos = {};
-    bloodInfos.bloodtype = values.join('');
-    bloodInfos.rhesus = rhesus;
-    return bloodInfos;
-}
-exports.getBloodInfos = getBloodInfos;
-
-
-const bloodTypeToPossibleGenes = (bloodtype) => {
+const getPossibleGenesFromBloodtype = (bloodtype) => {
 
     let returnValue = []
     if (bloodtype === "A") {
@@ -71,19 +83,29 @@ const bloodTypeToPossibleGenes = (bloodtype) => {
     returnObject.possibleGenes = returnValue;
     return returnObject;
 }
-exports.bloodTypeToPossibleGenes = bloodTypeToPossibleGenes;
+exports.getPossibleGenesFromBloodtype = getPossibleGenesFromBloodtype;
 
+// ██████╗ ██╗  ██╗███████╗███████╗██╗   ██╗███████╗
+// ██╔══██╗██║  ██║██╔════╝██╔════╝██║   ██║██╔════╝
+// ██████╔╝███████║█████╗  ███████╗██║   ██║███████╗
+// ██╔══██╗██╔══██║██╔══╝  ╚════██║██║   ██║╚════██║
+// ██║  ██║██║  ██║███████╗███████║╚██████╔╝███████║
+// ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝ ╚══════╝
 
-
-const genesToRhesus = (gene1, gene2) => {
+/**
+ * ++ = Rh+
+ * +- = Rh+
+ * -- = Rh-
+ */
+const getRhesusFromGenes = (gene1, gene2) => {
     let x = gene1 === '+' ? true : false;
     let y = gene2 === '+' ? true : false;
     return x || y ? '+' : '-';
 }
-exports.genesToRhesus = genesToRhesus;
+exports.getRhesusFromGenes = getRhesusFromGenes;
 
 
-const rhesusToGenes = (rhesus) => {
+const getPossibleGenesFromRhesus = (rhesus) => {
     let returnValue = [];
     if (rhesus === '-') {
         returnValue.push(['-', '-']);
@@ -97,7 +119,15 @@ const rhesusToGenes = (rhesus) => {
     returnObject.possibleRhesusGenes = returnValue;
     return returnObject;
 }
-exports.rhesusToGenes = rhesusToGenes;
+exports.getPossibleGenesFromRhesus = getPossibleGenesFromRhesus;
+
+
+// ██████╗ ██████╗  ██████╗  ██████╗ ██████╗  █████╗ ███╗   ███╗    ███████╗████████╗ █████╗ ██████╗ ████████╗███████╗    ██╗  ██╗███████╗██████╗ ███████╗
+// ██╔══██╗██╔══██╗██╔═══██╗██╔════╝ ██╔══██╗██╔══██╗████╗ ████║    ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝██╔════╝    ██║  ██║██╔════╝██╔══██╗██╔════╝
+// ██████╔╝██████╔╝██║   ██║██║  ███╗██████╔╝███████║██╔████╔██║    ███████╗   ██║   ███████║██████╔╝   ██║   ███████╗    ███████║█████╗  ██████╔╝█████╗  
+// ██╔═══╝ ██╔══██╗██║   ██║██║   ██║██╔══██╗██╔══██║██║╚██╔╝██║    ╚════██║   ██║   ██╔══██║██╔══██╗   ██║   ╚════██║    ██╔══██║██╔══╝  ██╔══██╗██╔══╝  
+// ██║     ██║  ██║╚██████╔╝╚██████╔╝██║  ██║██║  ██║██║ ╚═╝ ██║    ███████║   ██║   ██║  ██║██║  ██║   ██║   ███████║    ██║  ██║███████╗██║  ██║███████╗
+// ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝    ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
 
 
 const N = parseInt(readline());
@@ -111,8 +141,18 @@ for (let i = 0; i < N; i++) {
     console.error(`child - ${child}`);
 
     if (child === '?') {
-        console.error(getBloodInfos(parent1));
-        console.error(getBloodInfos(parent2));
+        let parent1bloodInfos = getBloodInfos(parent1);
+        let parent2bloodInfos = getBloodInfos(parent2);
+
+        let parent1genes = getPossibleGenesFromBloodtype(parent1bloodInfos.bloodtype)
+        console.error(`Possible genes for parent 1 : ${parent1genes}`)
+
+        let parent2genes = getPossibleGenesFromBloodtype(parent2bloodInfos.bloodtype)
+        console.error(`Possible genes for parent 2 : ${parent2genes}`)
+
+        console.error(parent1bloodInfos);
+        console.error(parent2bloodInfos);
+
     }
 
     console.error(`--------------------`);
