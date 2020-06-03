@@ -42,7 +42,7 @@ exports.getBloodInfos = getBloodInfos;
  * AB = AB blood type
  */
 
-const genesToBloodType = (gene1, gene2) => {
+const GetBloodtypeFromGenes = (gene1, gene2) => {
     if (gene1 === 'A' && gene2 === 'A') { return { bloodtype: 'A' }; }
 
     if (gene1 === 'A' && gene2 === 'O') { return { bloodtype: 'A' }; }
@@ -58,25 +58,26 @@ const genesToBloodType = (gene1, gene2) => {
     if (gene1 === 'A' && gene2 === 'B') { return { bloodtype: 'AB' }; }
     if (gene1 === 'B' && gene2 === 'A') { return { bloodtype: 'AB' }; }
 }
-exports.genesToBloodType = genesToBloodType;
+exports.GetBloodtypeFromGenes = GetBloodtypeFromGenes;
 
 
 const getPossibleGenesFromBloodtype = (bloodtype) => {
 
     let returnValue = []
     if (bloodtype === "A") {
-        returnValue.push(['A', 'A']);
-        returnValue.push(['A', 'O']);
+        returnValue.push('A');
+        returnValue.push('O');
     }
     if (bloodtype === "B") {
-        returnValue.push(['B', 'B']);
-        returnValue.push(['B', 'O']);
+        returnValue.push('B');
+        returnValue.push('O');
     }
     if (bloodtype === "O") {
-        returnValue.push(['O', 'O']);
+        returnValue.push('O');
     }
     if (bloodtype === "AB") {
-        returnValue.push(['A', 'B']);
+        returnValue.push('A');
+        returnValue.push('B');
     }
 
     let returnObject = {}
@@ -108,11 +109,11 @@ exports.getRhesusFromGenes = getRhesusFromGenes;
 const getPossibleGenesFromRhesus = (rhesus) => {
     let returnValue = [];
     if (rhesus === '-') {
-        returnValue.push(['-', '-']);
+        returnValue.push('-');
     }
     else {
-        returnValue.push(['+', '+']);
-        returnValue.push(['+', '-']);
+        returnValue.push('+');
+        returnValue.push('-');
     }
 
     let returnObject = {}
@@ -144,11 +145,17 @@ for (let i = 0; i < N; i++) {
         let parent1bloodInfos = getBloodInfos(parent1);
         let parent2bloodInfos = getBloodInfos(parent2);
 
-        let parent1genes = getPossibleGenesFromBloodtype(parent1bloodInfos.bloodtype)
-        console.error(`Possible genes for parent 1 : ${parent1genes}`)
+        let parent1Groupgenes = getPossibleGenesFromBloodtype(parent1bloodInfos.bloodtype)
+        console.error(`Possible genes for parent 1 : ${parent1Groupgenes.possibleGenes}`)
 
-        let parent2genes = getPossibleGenesFromBloodtype(parent2bloodInfos.bloodtype)
-        console.error(`Possible genes for parent 2 : ${parent2genes}`)
+        let parent1Rhesusgenes = getPossibleGenesFromRhesus(parent1bloodInfos.rhesus)
+        console.error(`Possible genes for parent 1 : ${parent1Rhesusgenes.possibleRhesusGenes}`)
+
+        let parent2Groupgenes = getPossibleGenesFromBloodtype(parent2bloodInfos.bloodtype)
+        console.error(`Possible genes for parent 2 : ${parent2Groupgenes.possibleGenes}`)
+        
+        let parent2Rhesusgenes = getPossibleGenesFromRhesus(parent2bloodInfos.rhesus)
+        console.error(`Possible genes for parent 2 : ${parent2Rhesusgenes.possibleRhesusGenes}`)
 
         console.error(parent1bloodInfos);
         console.error(parent2bloodInfos);

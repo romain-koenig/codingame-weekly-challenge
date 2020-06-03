@@ -18,27 +18,27 @@ test('Get Bloodtype and Rhesus from string O- : should be O and -', () => {
 
 
 test('Genes A and A gives bloodtype A', () => {
-    expect(bloodtypes.genesToBloodType('A', 'A')).toStrictEqual({ bloodtype: 'A' });
+    expect(bloodtypes.GetBloodtypeFromGenes('A', 'A')).toStrictEqual({ bloodtype: 'A' });
 });
 
 test('Genes A and O gives bloodtype A', () => {
-    expect(bloodtypes.genesToBloodType('A', 'O')).toStrictEqual({ bloodtype: 'A' });
+    expect(bloodtypes.GetBloodtypeFromGenes('A', 'O')).toStrictEqual({ bloodtype: 'A' });
 });
 
 test('Genes B and B gives bloodtype B', () => {
-    expect(bloodtypes.genesToBloodType('B', 'B')).toStrictEqual({ bloodtype: 'B' });
+    expect(bloodtypes.GetBloodtypeFromGenes('B', 'B')).toStrictEqual({ bloodtype: 'B' });
 });
 
 test('Genes B and O gives bloodtype B', () => {
-    expect(bloodtypes.genesToBloodType('B', 'O')).toStrictEqual({ bloodtype: 'B' });
+    expect(bloodtypes.GetBloodtypeFromGenes('B', 'O')).toStrictEqual({ bloodtype: 'B' });
 });
 
 test('Genes O and O gives bloodtype O', () => {
-    expect(bloodtypes.genesToBloodType('O', 'O')).toStrictEqual({ bloodtype: 'O' });
+    expect(bloodtypes.GetBloodtypeFromGenes('O', 'O')).toStrictEqual({ bloodtype: 'O' });
 });
 
 test('Genes A and B gives bloodtype AB', () => {
-    expect(bloodtypes.genesToBloodType('B', 'A')).toStrictEqual({ bloodtype: 'AB' });
+    expect(bloodtypes.GetBloodtypeFromGenes('B', 'A')).toStrictEqual({ bloodtype: 'AB' });
 });
 
 
@@ -47,16 +47,16 @@ test('Genes A and B gives bloodtype AB', () => {
 
 
 test('Bloodtype A comes from gene A and gene O or twice gene A', () => {
-    expect(bloodtypes.getPossibleGenesFromBloodtype('A')).toStrictEqual({ possibleGenes: [['A', 'A'], ['A', 'O']] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('A')).toStrictEqual({ possibleGenes: ['A', 'O'] });
 });
 test('Bloodtype B comes from gene B and gene O or twice gene B', () => {
-    expect(bloodtypes.getPossibleGenesFromBloodtype('B')).toStrictEqual({ possibleGenes: [['B', 'B'], ['B', 'O']] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('B')).toStrictEqual({ possibleGenes: ['B', 'O'] });
 });
 test('Bloodtype O comes from gene O twice', () => {
-    expect(bloodtypes.getPossibleGenesFromBloodtype('O')).toStrictEqual({ possibleGenes: [['O', 'O']] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('O')).toStrictEqual({ possibleGenes: ['O'] });
 });
 test('Bloodtype AB comes from gene A and gene B', () => {
-    expect(bloodtypes.getPossibleGenesFromBloodtype('AB')).toStrictEqual({ possibleGenes: [['A', 'B']] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('AB')).toStrictEqual({ possibleGenes: ['A', 'B'] });
 });
 
 
@@ -78,10 +78,20 @@ test('Genes - and + gives Rhesus +', () => {
 });
 
 
+//If we only pass one value, should still work
+test('Genes + only gives Rhesus +', () => {
+    expect(bloodtypes.getRhesusFromGenes('+')).toBe('+');
+});
+
+test('Genes - only gives Rhesus -', () => {
+    expect(bloodtypes.getRhesusFromGenes('-')).toBe('-');
+});
+
+
 
 test('Rhesus - comes from gene - twice', () => {
-    expect(bloodtypes.getPossibleGenesFromRhesus('-')).toStrictEqual({ possibleRhesusGenes: [['-', '-']] });
+    expect(bloodtypes.getPossibleGenesFromRhesus('-')).toStrictEqual({ possibleRhesusGenes: ['-'] });
 });
 test('Rhesus + comes from gene + twice or +/-', () => {
-    expect(bloodtypes.getPossibleGenesFromRhesus('+')).toStrictEqual({ possibleRhesusGenes: [['+', '+'], ['+', '-']] });
+    expect(bloodtypes.getPossibleGenesFromRhesus('+')).toStrictEqual({ possibleRhesusGenes: ['+', '-'] });
 });

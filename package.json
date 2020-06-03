@@ -2,7 +2,7 @@
   "name": "codingame-weekly-challenge",
   "version": "1.0.0",
   "description": "",
-  "main": "sum.js",
+  "main": "BloodTypes.js",
   "dependencies": {
     "jest": "^26.0.1"
   },
