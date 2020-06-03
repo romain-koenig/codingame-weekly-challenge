@@ -20,6 +20,11 @@ const getBloodInfos = (blood) => {
 }
 exports.getBloodInfos = getBloodInfos;
 
+//usage = list.filter(onlyUnique)
+const onlyUnique = (value, index, self) => { 
+    return self.indexOf(value) === index;
+}
+exports.onlyUnique = onlyUnique;
 
 
 // ██████╗ ██╗      ██████╗  ██████╗ ██████╗ ████████╗██╗   ██╗██████╗ ███████╗
@@ -65,19 +70,18 @@ const getPossibleGenesFromBloodtype = (bloodtype) => {
 
     let returnValue = []
     if (bloodtype === "A") {
-        returnValue.push('A');
-        returnValue.push('O');
+        returnValue.push('AA');
+        returnValue.push('AO');
     }
     if (bloodtype === "B") {
-        returnValue.push('B');
-        returnValue.push('O');
+        returnValue.push('BB');
+        returnValue.push('BO');
     }
     if (bloodtype === "O") {
-        returnValue.push('O');
+        returnValue.push('OO');
     }
     if (bloodtype === "AB") {
-        returnValue.push('A');
-        returnValue.push('B');
+        returnValue.push('AB');
     }
 
     let returnObject = {}
@@ -122,6 +126,43 @@ const getPossibleGenesFromRhesus = (rhesus) => {
 }
 exports.getPossibleGenesFromRhesus = getPossibleGenesFromRhesus;
 
+//  ██████╗██╗  ██╗██╗██╗     ██████╗     ██╗███╗   ██╗███████╗ ██████╗ ███████╗
+// ██╔════╝██║  ██║██║██║     ██╔══██╗    ██║████╗  ██║██╔════╝██╔═══██╗██╔════╝
+// ██║     ███████║██║██║     ██║  ██║    ██║██╔██╗ ██║█████╗  ██║   ██║███████╗
+// ██║     ██╔══██║██║██║     ██║  ██║    ██║██║╚██╗██║██╔══╝  ██║   ██║╚════██║
+// ╚██████╗██║  ██║██║███████╗██████╔╝    ██║██║ ╚████║██║     ╚██████╔╝███████║
+//  ╚═════╝╚═╝  ╚═╝╚═╝╚══════╝╚═════╝     ╚═╝╚═╝  ╚═══╝╚═╝      ╚═════╝ ╚══════╝
+
+const getPossibleChildGroupGenesFromParentsGenes = (parent1GroupGenes, parent2GroupGenes) => {
+
+    console.error(`getPossibleChildGroupGenesFromParentsGenes`);
+    
+    console.error(`parent1GroupGenes : ${parent1GroupGenes} - Length = ${parent1GroupGenes.length}`);
+    console.error(`parent2GroupGenes : ${parent2GroupGenes} - Length = ${parent2GroupGenes.length}`);
+
+    let possibleGenes = [];
+    for (let i = 0 ; i < parent1GroupGenes.length ; i++) {
+        for (let j = 0 ; j < parent2GroupGenes.length ; j++) {
+            console.error(`parent1GroupGenes[${i}][0] : ${parent1GroupGenes[i][0]}`);
+            console.error(`parent1GroupGenes[${i}][1] : ${parent1GroupGenes[i][1]}`);
+            console.error(`parent2GroupGenes[${j}][0] : ${parent2GroupGenes[j][0]}`);
+            console.error(`parent2GroupGenes[${j}][1] : ${parent2GroupGenes[j][1]}`);
+            console.error(`-----`);
+            possibleGenes.push(parent1GroupGenes[i][0].concat(parent2GroupGenes[j][0]));
+            possibleGenes.push(parent1GroupGenes[i][0].concat(parent2GroupGenes[j][1]));
+            possibleGenes.push(parent1GroupGenes[i][1].concat(parent2GroupGenes[j][0]));
+            possibleGenes.push(parent1GroupGenes[i][1].concat(parent2GroupGenes[j][1]));
+        }
+    }
+    
+    console.error(possibleGenes);
+    possibleGenes = possibleGenes.filter(onlyUnique);
+    console.error(possibleGenes);
+
+    console.error(`END of getPossibleChildGroupGenesFromParentsGenes`);
+    return possibleGenes;
+}
+exports.getPossibleChildGroupGenesFromParentsGenes = getPossibleChildGroupGenesFromParentsGenes;
 
 // ██████╗ ██████╗  ██████╗  ██████╗ ██████╗  █████╗ ███╗   ███╗    ███████╗████████╗ █████╗ ██████╗ ████████╗███████╗    ██╗  ██╗███████╗██████╗ ███████╗
 // ██╔══██╗██╔══██╗██╔═══██╗██╔════╝ ██╔══██╗██╔══██╗████╗ ████║    ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝██╔════╝    ██║  ██║██╔════╝██╔══██╗██╔════╝
@@ -153,12 +194,14 @@ for (let i = 0; i < N; i++) {
 
         let parent2Groupgenes = getPossibleGenesFromBloodtype(parent2bloodInfos.bloodtype)
         console.error(`Possible genes for parent 2 : ${parent2Groupgenes.possibleGenes}`)
-        
+
         let parent2Rhesusgenes = getPossibleGenesFromRhesus(parent2bloodInfos.rhesus)
         console.error(`Possible genes for parent 2 : ${parent2Rhesusgenes.possibleRhesusGenes}`)
 
         console.error(parent1bloodInfos);
         console.error(parent2bloodInfos);
+
+        let childPossibleGenes = getPossibleChildGroupGenesFromParentsGenes(parent1Groupgenes.possibleGenes, parent2Groupgenes.possibleGenes)
 
     }
 

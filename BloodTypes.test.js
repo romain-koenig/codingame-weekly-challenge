@@ -47,16 +47,16 @@ test('Genes A and B gives bloodtype AB', () => {
 
 
 test('Bloodtype A comes from gene A and gene O or twice gene A', () => {
-    expect(bloodtypes.getPossibleGenesFromBloodtype('A')).toStrictEqual({ possibleGenes: ['A', 'O'] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('A')).toStrictEqual({ possibleGenes: ['AA', 'AO'] });
 });
 test('Bloodtype B comes from gene B and gene O or twice gene B', () => {
-    expect(bloodtypes.getPossibleGenesFromBloodtype('B')).toStrictEqual({ possibleGenes: ['B', 'O'] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('B')).toStrictEqual({ possibleGenes: ['BB', 'BO'] });
 });
 test('Bloodtype O comes from gene O twice', () => {
-    expect(bloodtypes.getPossibleGenesFromBloodtype('O')).toStrictEqual({ possibleGenes: ['O'] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('O')).toStrictEqual({ possibleGenes: ['OO'] });
 });
 test('Bloodtype AB comes from gene A and gene B', () => {
-    expect(bloodtypes.getPossibleGenesFromBloodtype('AB')).toStrictEqual({ possibleGenes: ['A', 'B'] });
+    expect(bloodtypes.getPossibleGenesFromBloodtype('AB')).toStrictEqual({ possibleGenes: ['AB'] });
 });
 
 
@@ -95,3 +95,21 @@ test('Rhesus - comes from gene - twice', () => {
 test('Rhesus + comes from gene + twice or +/-', () => {
     expect(bloodtypes.getPossibleGenesFromRhesus('+')).toStrictEqual({ possibleRhesusGenes: ['+', '-'] });
 });
+
+
+test('Parents with genes AA, AB can have child AA or AB', () => {
+    expect(bloodtypes.getPossibleChildGroupGenesFromParentsGenes(['AA'], ['AB'])).toStrictEqual(['AA', 'AB']);
+})
+
+test('Parents with genes AA, OO can have child AO', () => {
+    expect(bloodtypes.getPossibleChildGroupGenesFromParentsGenes(['AA'], ['OO'])).toStrictEqual(['AO']);
+})
+test('Parents with genes AA, AO can have child AO, OO', () => {
+    expect(bloodtypes.getPossibleChildGroupGenesFromParentsGenes(['AA'], ['AO'])).toStrictEqual(['AA', 'AO']);
+})
+
+
+
+test('Only unique values / filter', () => {
+    expect(['AA', 'AB', 'AA', 'AB', 'AO'].filter(bloodtypes.onlyUnique)).toStrictEqual(['AA', 'AB', 'AO']);
+})
