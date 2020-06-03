@@ -19,67 +19,59 @@ const readline = () => "TEST";
  */
 
 const genesToBloodType = (gene1, gene2) => {
-    if (gene1 === 'A' && gene2 === 'A') { return {bloodtype: 'A'}; }
-    
-    if (gene1 === 'A' && gene2 === 'O') { return {bloodtype: 'A'}; }
-    if (gene1 === 'O' && gene2 === 'A') { return {bloodtype: 'A'}; }
-    
-    if (gene1 === 'B' && gene2 === 'B') { return {bloodtype: 'B'}; }
-    
-    if (gene1 === 'B' && gene2 === 'O') { return {bloodtype: 'B'}; }
-    if (gene1 === 'O' && gene2 === 'B') { return {bloodtype: 'B'}; }
-    
-    if (gene1 === 'O' && gene2 === 'O') { return {bloodtype: 'O'}; }
-    
-    if (gene1 === 'A' && gene2 === 'B') { return {bloodtype: 'AB'}; }
-    if (gene1 === 'B' && gene2 === 'A') { return {bloodtype: 'AB'}; }
+    if (gene1 === 'A' && gene2 === 'A') { return { bloodtype: 'A' }; }
+
+    if (gene1 === 'A' && gene2 === 'O') { return { bloodtype: 'A' }; }
+    if (gene1 === 'O' && gene2 === 'A') { return { bloodtype: 'A' }; }
+
+    if (gene1 === 'B' && gene2 === 'B') { return { bloodtype: 'B' }; }
+
+    if (gene1 === 'B' && gene2 === 'O') { return { bloodtype: 'B' }; }
+    if (gene1 === 'O' && gene2 === 'B') { return { bloodtype: 'B' }; }
+
+    if (gene1 === 'O' && gene2 === 'O') { return { bloodtype: 'O' }; }
+
+    if (gene1 === 'A' && gene2 === 'B') { return { bloodtype: 'AB' }; }
+    if (gene1 === 'B' && gene2 === 'A') { return { bloodtype: 'AB' }; }
 }
 exports.genesToBloodType = genesToBloodType;
+
+const getBloodInfos = (blood) => {
+
+    let values = blood.split('');
+    let rhesus = values.pop();
+
+    let bloodInfos = {};
+    bloodInfos.bloodtype = values.join('');
+    bloodInfos.rhesus = rhesus;
+    return bloodInfos;
+}
+exports.getBloodInfos = getBloodInfos;
+
 
 const bloodTypeToPossibleGenes = (bloodtype) => {
 
     let returnValue = []
     if (bloodtype === "A") {
-        returnValue.push(['A','A']);
-        returnValue.push(['A','O']);
+        returnValue.push(['A', 'A']);
+        returnValue.push(['A', 'O']);
     }
     if (bloodtype === "B") {
-        returnValue.push(['B','B']);
-        returnValue.push(['B','O']);
+        returnValue.push(['B', 'B']);
+        returnValue.push(['B', 'O']);
     }
     if (bloodtype === "O") {
-        returnValue.push(['O','O']);
+        returnValue.push(['O', 'O']);
     }
     if (bloodtype === "AB") {
-        returnValue.push(['A','B']);
+        returnValue.push(['A', 'B']);
     }
 
-    return returnValue;
+    let returnObject = {}
+    returnObject.possibleGenes = returnValue;
+    return returnObject;
 }
 exports.bloodTypeToPossibleGenes = bloodTypeToPossibleGenes;
-
-
-const bloodTypeToPossibleGenesObject = (bloodtype) => {
-
-    let returnValue = []
-    if (bloodtype === "A") {
-        returnValue.push(['A','A']);
-        returnValue.push(['A','O']);
-    }
-    if (bloodtype === "B") {
-        returnValue.push(['B','B']);
-        returnValue.push(['B','O']);
-    }
-    if (bloodtype === "O") {
-        returnValue.push(['O','O']);
-    }
-    if (bloodtype === "AB") {
-        returnValue.push(['A','B']);
-    }
-
-    return returnValue;
-}
-exports.bloodTypeToPossibleGenesObject = bloodTypeToPossibleGenes;
 
 
 
@@ -90,6 +82,7 @@ const genesToRhesus = (gene1, gene2) => {
 }
 exports.genesToRhesus = genesToRhesus;
 
+
 const rhesusToGenes = (rhesus) => {
     let returnValue = [];
     if (rhesus === '-') {
@@ -99,9 +92,13 @@ const rhesusToGenes = (rhesus) => {
         returnValue.push(['+', '+']);
         returnValue.push(['+', '-']);
     }
-    return returnValue;
+
+    let returnObject = {}
+    returnObject.possibleRhesusGenes = returnValue;
+    return returnObject;
 }
 exports.rhesusToGenes = rhesusToGenes;
+
 
 const N = parseInt(readline());
 for (let i = 0; i < N; i++) {
@@ -112,17 +109,16 @@ for (let i = 0; i < N; i++) {
     console.error(`parent1 - ${parent1}`);
     console.error(`parent2 - ${parent2}`);
     console.error(`child - ${child}`);
-    
+
     if (child === '?') {
-        
+        console.error(getBloodInfos(parent1));
+        console.error(getBloodInfos(parent2));
     }
 
     console.error(`--------------------`);
 
 }
 
-
-console.error()
 
 // Write an answer using console.log()
 // To debug: console.error('Debug messages...');
