@@ -38,16 +38,16 @@ test('Bloodtype AB comes from gene A and gene B', () => {
 
 
 test('Genes + twice gives Rhesus +', () => {
-    expect(bloodtypes.getRhesusFromGenes('+', '+')).toBe('+');
+    expect(bloodtypes.getRhesusFromGenes('++')).toBe('+');
 });
 test('Genes - twice gives Rhesus -', () => {
-    expect(bloodtypes.getRhesusFromGenes('-', '-')).toBe('-');
+    expect(bloodtypes.getRhesusFromGenes('--')).toBe('-');
 });
 test('Genes + and - gives Rhesus +', () => {
-    expect(bloodtypes.getRhesusFromGenes('+', '-')).toBe('+');
+    expect(bloodtypes.getRhesusFromGenes('+-')).toBe('+');
 });
 test('Genes - and + gives Rhesus +', () => {
-    expect(bloodtypes.getRhesusFromGenes('-', '+')).toBe('+');
+    expect(bloodtypes.getRhesusFromGenes('-+')).toBe('+');
 });
 
 
@@ -63,10 +63,10 @@ test('Genes - only gives Rhesus -', () => {
 
 
 test('Rhesus - comes from gene - twice', () => {
-    expect(bloodtypes.getPossibleGenesFromRhesus('-')).toStrictEqual({ possibleRhesusGenes: ['-'] });
+    expect(bloodtypes.getPossibleGenesFromRhesus('-')).toStrictEqual({ possibleRhesusGenes: ['--'] });
 });
 test('Rhesus + comes from gene + twice or +/-', () => {
-    expect(bloodtypes.getPossibleGenesFromRhesus('+')).toStrictEqual({ possibleRhesusGenes: ['+', '-'] });
+    expect(bloodtypes.getPossibleGenesFromRhesus('+')).toStrictEqual({ possibleRhesusGenes: ['++', '+-'] });
 });
 
 
@@ -89,4 +89,36 @@ test('Parents with genes AA or BB - and AO can have child AA, AO, AB, BO', () =>
 
 test('Only unique values / filter', () => {
     expect(['AA', 'AB', 'AA', 'AB', 'AO'].filter(bloodtypes.onlyUnique)).toStrictEqual(['AA', 'AB', 'AO']);
+})
+
+
+test('Parents with rhesus genes ++ and +- and AO can have child ++ and +-', () => {
+    expect(bloodtypes.getPossibleChildRhesusGenesFromParentsGenes(['++'], ['+-'])).toStrictEqual(['++', '+-']);
+})
+
+
+
+test('With possible rhesus genes ++ and +-, only rhesus + is possible', () => {
+    expect(bloodtypes.getPossibleRhesusFromGenes(['++', '+-'])).toStrictEqual(['+']);
+})
+test('With possible rhesus genes ++ and +-, only rhesus + is possible', () => {
+    expect(bloodtypes.getPossibleRhesusFromGenes(['--'])).toStrictEqual(['-']);
+})
+test('With possible rhesus genes ++ and ---, rhesus + and - are both possible', () => {
+    expect(bloodtypes.getPossibleRhesusFromGenes(['++', '--'])).toStrictEqual(['+', '-']);
+})
+
+
+test('With possible group genes AA and AO, group possible = only A', () => {
+    expect(bloodtypes.getPossibleGroupsFromPossibleGenes(['AA', 'AO'])).toStrictEqual(['A']);
+})
+
+
+test('With possible group genes AA and BB, group possible = A, B', () => {
+    expect(bloodtypes.getPossibleGroupsFromPossibleGenes(['AA', 'BB'])).toStrictEqual(['A', 'B']);
+})
+
+
+test('With groups A, B, AB and Rhesus +, -, answers are A+, A-, B+, B-, AB+, AB-', () => {
+    expect(bloodtypes.getCompleteGroupList(['A', 'B', 'AB'], ['+', '-'])).toStrictEqual(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'])
 })
