@@ -128,7 +128,7 @@ exports.getPossibleGroupsFromPossibleGenes = getPossibleGroupsFromPossibleGenes;
  * -- = Rh-
  */
 const getRhesusFromGenes = (gene) => {
-    console.error(`getRhesusFromGenes - gene : ${gene}`)
+    // console.error(`getRhesusFromGenes - gene : ${gene}`)
     let x = gene[0] === '+' ? true : false;
     let y = gene[1] === '+' ? true : false;
     return x || y ? '+' : '-';
@@ -136,7 +136,7 @@ const getRhesusFromGenes = (gene) => {
 exports.getRhesusFromGenes = getRhesusFromGenes;
 
 const getPossibleRhesusFromGenes = (genes) => {
-    console.error(`getPossibleRhesusFromGenes - genes : ${genes}`);
+    // console.error(`getPossibleRhesusFromGenes - genes : ${genes}`);
     let possibleGenes = [];
     for (let i = 0; i < genes.length; i++) {
         possibleGenes.push(getRhesusFromGenes(genes[i]))
@@ -206,6 +206,50 @@ const getPossibleChildRhesusGenesFromParentsGenes = (parent1RhesusGenes, parent2
 exports.getPossibleChildRhesusGenesFromParentsGenes = getPossibleChildRhesusGenesFromParentsGenes;
 
 
+function getAnswerForChild(parent1, parent2) {
+    let parent1bloodInfos = getBloodInfos(parent1);
+    let parent2bloodInfos = getBloodInfos(parent2);
+
+    let parent1Groupgenes = getPossibleGenesFromBloodtype(parent1bloodInfos.bloodtype);
+    let parent1RhesusGenes = getPossibleGenesFromRhesus(parent1bloodInfos.rhesus);
+
+    let parent2Groupgenes = getPossibleGenesFromBloodtype(parent2bloodInfos.bloodtype);
+    let parent2RhesusGenes = getPossibleGenesFromRhesus(parent2bloodInfos.rhesus);
+
+    let possibleChildGroupGenes = getPossibleChildGroupGenesFromParentsGenes(parent1Groupgenes.possibleGenes, parent2Groupgenes.possibleGenes);
+    let possibleChildRhesusGenes = getPossibleChildRhesusGenesFromParentsGenes(parent1RhesusGenes.possibleRhesusGenes, parent2RhesusGenes.possibleRhesusGenes);
+    
+    let possibleChildRhesus = getPossibleRhesusFromGenes(possibleChildRhesusGenes);
+    let possibleChildGroup = getPossibleGroupsFromPossibleGenes(possibleChildGroupGenes);
+ 
+    let answer = getCompleteGroupList(possibleChildGroup, possibleChildRhesus);   
+    
+    answer.filter(onlyUnique);
+    answer.sort();
+
+    return answer;
+}
+exports.getAnswerForChild = getAnswerForChild;
+
+function getAnswerForParent(parent, child) {
+    
+    let allPossibleGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+
+    let answer = [];
+    for (let i = 0; i < allPossibleGroups.length; i++) {
+        let possibleChild = getAnswerForChild(parent, allPossibleGroups[i])
+        if (possibleChild.includes(child) === true) {
+            answer.push(allPossibleGroups[i]);
+        }
+    }
+
+    answer.filter(onlyUnique);
+    answer.sort();
+
+    return answer;
+}
+exports.getAnswerForParent = getAnswerForParent;
+
 //  █████╗ ██╗     ██╗         ██╗███╗   ██╗███████╗ ██████╗ ███████╗    ███████╗██████╗  ██████╗ ███╗   ███╗     ██████╗ ███████╗███╗   ██╗███████╗███████╗
 // ██╔══██╗██║     ██║         ██║████╗  ██║██╔════╝██╔═══██╗██╔════╝    ██╔════╝██╔══██╗██╔═══██╗████╗ ████║    ██╔════╝ ██╔════╝████╗  ██║██╔════╝██╔════╝
 // ███████║██║     ██║         ██║██╔██╗ ██║█████╗  ██║   ██║███████╗    █████╗  ██████╔╝██║   ██║██╔████╔██║    ██║  ███╗█████╗  ██╔██╗ ██║█████╗  ███████╗
@@ -222,7 +266,7 @@ const getCompleteGroupList = (possibleGroups, possibleRhesus) => {
             answers.push(possibleGroups[i].concat(possibleRhesus[j]));
         }
     }
-    answers.sort((a, b) => a-b);
+    answers.sort((a, b) => a - b);
     return answers;
 }
 exports.getCompleteGroupList = getCompleteGroupList;
@@ -247,43 +291,19 @@ for (let i = 0; i < N; i++) {
     console.error(`child - ${child}`);
 
     if (child === '?') {
-        getAnswerForChild(parent1, parent2);
+        let answer = getAnswerForChild(parent1, parent2);
+        console.log(answer.join(" "));
     }
     else if (parent1 === '?') {
-        
+
+        let answer = getAnswerForParent(parent2, child);
+        answer.length > 0 ? console.log(answer.join(" ")) : console.log('impossible');
     }
-
-    console.error(`--------------------`);
-
+    else {
+        let answer = getAnswerForParent(parent1, child);
+        answer.length > 0 ? console.log(answer.join(" ")) : console.log('impossible');
+    }
 }
 
 
 
-function getAnswerForChild(parent1, parent2) {
-    let parent1bloodInfos = getBloodInfos(parent1);
-    let parent2bloodInfos = getBloodInfos(parent2);
-    console.error(parent1bloodInfos);
-    console.error(parent2bloodInfos);
-    let parent1Groupgenes = getPossibleGenesFromBloodtype(parent1bloodInfos.bloodtype);
-    console.error(`Possible genes for parent 1 : ${parent1Groupgenes.possibleGenes}`);
-    let parent1RhesusGenes = getPossibleGenesFromRhesus(parent1bloodInfos.rhesus);
-    console.error(`Possible Rhesus genes for parent 1 : ${parent1RhesusGenes.possibleRhesusGenes}`);
-    let parent2Groupgenes = getPossibleGenesFromBloodtype(parent2bloodInfos.bloodtype);
-    console.error(`Possible genes for parent 2 : ${parent2Groupgenes.possibleGenes}`);
-    let parent2RhesusGenes = getPossibleGenesFromRhesus(parent2bloodInfos.rhesus);
-    console.error(`Possible Rhesus genes for parent 2 : ${parent2RhesusGenes.possibleRhesusGenes}`);
-    let possibleChildGroupGenes = getPossibleChildGroupGenesFromParentsGenes(parent1Groupgenes.possibleGenes, parent2Groupgenes.possibleGenes);
-    console.error(`possibleChildGroupGenes : ${possibleChildGroupGenes}`);
-    let possibleChildRhesusGenes = getPossibleChildRhesusGenesFromParentsGenes(parent1RhesusGenes.possibleRhesusGenes, parent2RhesusGenes.possibleRhesusGenes);
-    console.error(`possibleChildRhesusGenes : ${possibleChildRhesusGenes}`);
-    let possibleChildRhesus = getPossibleRhesusFromGenes(possibleChildRhesusGenes);
-    console.error(`possibleChildRhesus : ${possibleChildRhesus}`);
-    let possibleChildGroup = getPossibleGroupsFromPossibleGenes(possibleChildGroupGenes);
-    console.error(`possibleChildGroup : ${possibleChildGroup}`);
-    let answer = getCompleteGroupList(possibleChildGroup, possibleChildRhesus);
-    console.log(answer.join(" "));
-}
-// Write an answer using console.log()
-// To debug: console.error('Debug messages...');
-
-//console.log('answer');

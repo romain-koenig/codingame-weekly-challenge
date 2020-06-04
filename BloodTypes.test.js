@@ -120,5 +120,26 @@ test('With possible group genes AA and BB, group possible = A, B', () => {
 
 
 test('With groups A, B, AB and Rhesus +, -, answers are A+, A-, B+, B-, AB+, AB-', () => {
-    expect(bloodtypes.getCompleteGroupList(['A', 'B', 'AB'], ['+', '-'])).toStrictEqual(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'])
+    expect(bloodtypes.getCompleteGroupList(['A', 'B', 'AB'], ['+', '-'])).toStrictEqual(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']);
 })
+
+
+
+//////////////////////////
+
+
+test('Complete functionnal test : given 2 parents A- and 0+ get all possible combinations for child (A+ A- O+ O-)', () => {
+    expect(bloodtypes.getAnswerForChild('A-', 'O+')).toStrictEqual(['A+', 'A-', 'O+', 'O-']);
+})
+
+
+
+test('Complete functionnal test : given a parent A- and a child A+ get all possible combinations for other parent (A+ A- O+ O-)', () => {
+    expect(bloodtypes.getAnswerForParent('A-', 'A+')).toStrictEqual(['A+', 'AB+', 'B+', 'O+']);
+})
+
+
+test('Some results are impossible : given a parent AB- and a child O- >> no other parent combination', () => {
+    expect(bloodtypes.getAnswerForParent('AB-', 'O-')).toStrictEqual([]);
+})
+
