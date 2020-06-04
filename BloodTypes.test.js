@@ -17,33 +17,6 @@ test('Get Bloodtype and Rhesus from string O- : should be O and -', () => {
 
 
 
-test('Genes A and A gives bloodtype A', () => {
-    expect(bloodtypes.GetBloodtypeFromGenes('A', 'A')).toStrictEqual({ bloodtype: 'A' });
-});
-
-test('Genes A and O gives bloodtype A', () => {
-    expect(bloodtypes.GetBloodtypeFromGenes('A', 'O')).toStrictEqual({ bloodtype: 'A' });
-});
-
-test('Genes B and B gives bloodtype B', () => {
-    expect(bloodtypes.GetBloodtypeFromGenes('B', 'B')).toStrictEqual({ bloodtype: 'B' });
-});
-
-test('Genes B and O gives bloodtype B', () => {
-    expect(bloodtypes.GetBloodtypeFromGenes('B', 'O')).toStrictEqual({ bloodtype: 'B' });
-});
-
-test('Genes O and O gives bloodtype O', () => {
-    expect(bloodtypes.GetBloodtypeFromGenes('O', 'O')).toStrictEqual({ bloodtype: 'O' });
-});
-
-test('Genes A and B gives bloodtype AB', () => {
-    expect(bloodtypes.GetBloodtypeFromGenes('B', 'A')).toStrictEqual({ bloodtype: 'AB' });
-});
-
-
-
-
 
 
 test('Bloodtype A comes from gene A and gene O or twice gene A', () => {
@@ -108,6 +81,10 @@ test('Parents with genes AA, AO can have child AO, OO', () => {
     expect(bloodtypes.getPossibleChildGroupGenesFromParentsGenes(['AA'], ['AO'])).toStrictEqual(['AA', 'AO']);
 })
 
+
+test('Parents with genes AA or BB - and AO can have child AA, AO, AB, BO', () => {
+    expect(bloodtypes.getPossibleChildGroupGenesFromParentsGenes(['AA', 'BB'], ['AO'])).toStrictEqual(['AA', 'AO', 'AB', 'BO']);
+})
 
 
 test('Only unique values / filter', () => {
