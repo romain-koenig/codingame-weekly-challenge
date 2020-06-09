@@ -82,18 +82,43 @@ class Zombie extends Character {
 }
 exports.Zombie = Zombie;
 
+
+class Player extends Character {
+    #destination = null;
+    constructor(position, id) {
+        super(position, id);
+    }
+    getDestination() {
+        return this.#destination;
+    }
+    setDestination(destination) {
+        this.#destination = destination;
+    }
+    toString() {
+        return 'Player - ' + super.toString() + ` - Destination : ${this.#destination}`;
+    }
+    getOrder() {
+        return `${this.#destination.x} ${this.#destination.y}`;
+    }
+}
+exports.Player = Player;
+
 // game loop
 while (true && count > 0) {
 
     count--;
+
+
 
     var inputs = readline().split(' ');
     const x = parseInt(inputs[0]);
     const y = parseInt(inputs[1]);
     const humanCount = parseInt(readline());
 
-    const HumanList = [];
-    const ZombieList = [];
+    const player = new Player(new Coordinates(x, y), 0);
+
+    const humanList = [];
+    const zombieList = [];
 
     for (let i = 0; i < humanCount; i++) {
         var inputs = readline().split(' ');
@@ -101,10 +126,10 @@ while (true && count > 0) {
         const humanX = parseInt(inputs[1]);
         const humanY = parseInt(inputs[2]);
         const human = new Human(new Coordinates(humanX, humanY), humanId);
-        HumanList.push(human);
+        humanList.push(human);
     }
-    
-    
+
+
     const zombieCount = parseInt(readline());
     for (let i = 0; i < zombieCount; i++) {
         var inputs = readline().split(' ');
@@ -114,15 +139,21 @@ while (true && count > 0) {
         const zombieXNext = parseInt(inputs[3]);
         const zombieYNext = parseInt(inputs[4]);
         const zombie = new Zombie(new Coordinates(zombieX, zombieY), zombieId, new Coordinates(zombieXNext, zombieYNext));
-        ZombieList.push(zombie)
+        zombieList.push(zombie)
     }
-    
-    HumanList.map(e => console.error(e.toString()));
-    ZombieList.map(e => console.error(e.toString()));
-    
-    
-    
-    
-    console.log('0 0');     // Your destination coordinates
+
+    humanList.map(e => console.error(e.toString()));
+    zombieList.map(e => console.error(e.toString()));
+
+
+    // Basic algo : only one Zombie, going for it
+    let destination = new Coordinates(0, 0)
+    if (zombieList.length === 1) {
+        destination = zombieList[0].getPosition();
+        player.setDestination(destination);
+    }
+    player.setDestination(destination);
+
+    console.log(player.getOrder());     // Your destination coordinates
 
 }

@@ -36,6 +36,21 @@ test('Creating a Zombie / checking toString()', () => {
 })
 
 
+test('Creating a Player / checking Coordinates', () => {
+    expect(new cvz.Player(new cvz.Coordinates(12, 37), 6).getPosition()).toStrictEqual(new cvz.Coordinates(12, 37));
+})
+test('Creating a Player / checking ID', () => {
+    expect(new cvz.Player(new cvz.Coordinates(12, 37), 0).getId()).toStrictEqual(0);
+})
+test('Creating a Player / checking toString()', () => {
+    expect(new cvz.Player(new cvz.Coordinates(12, 37), 6).toString()).toStrictEqual('Player - Position : [12 - 37] - Destination : null');
+})
+test('Creating a Player / checking getOrder()', () => {
+    let p = new cvz.Player(new cvz.Coordinates(12, 37), 6);
+    p.setDestination(new cvz.Coordinates(25, 12));
+    expect(p.getOrder()).toStrictEqual('25 12');
+})
+
 
 test('computing distance between Human H (0, 899) and Zombie Z (544, 98) (should be 968)', () => {
     expect(
