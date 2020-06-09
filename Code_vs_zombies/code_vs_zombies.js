@@ -171,18 +171,22 @@ while (true && count > 0) {
     }
     else if (zombieList.length > 1) {
         // More than ONE Zombie. Dumb algo : still go for the first in the list
-        destination = zombieList[0].getPosition();
+        //destination = zombieList[0].getPosition();
+        // a little less dumb, go where the zombie is going
+        destination = zombieList[0].computeNextPosition();
+        //No surprise, still same results, wins for every game except 10, 11, 13, 19
+        
         player.setDestination(destination);
 
     }
     player.setDestination(destination);
 
     //DEBUG : list all relevant data
-    // humanList.map(e => console.error(e.toString()));
-    // zombieList.map(e => console.error(e.toString()));
-    // console.error(player.toString())
+    humanList.map(e => console.error(e.toString()));
+    zombieList.map(e => console.error(e.toString()));
+    console.error(player.toString())
 
     // Output of the game
-    // console.log(player.getOrder());     // Your destination coordinates
+    console.log(player.getOrder());     // Your destination coordinates
 
 }
