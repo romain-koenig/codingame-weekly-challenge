@@ -152,6 +152,12 @@ while (true && count > 0) {
         destination = zombieList[0].getPosition();
         player.setDestination(destination);
     }
+    else {
+        // More than ONE Zombie. Dumb algo : still go for the first in the list
+        destination = zombieList[0].getPosition();
+        player.setDestination(destination);
+
+    }
     player.setDestination(destination);
 
     console.log(player.getOrder());     // Your destination coordinates
