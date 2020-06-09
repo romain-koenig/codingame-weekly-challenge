@@ -44,23 +44,52 @@ class Character {
     #position = null;
     #id = null;
 
-    constructor(position, id) {
+    #destination = null;
+    #speed = 0;
+
+    constructor(position, id, destination) {
         this.#position = position;
         this.#id = id;
+        this.#destination = destination;
+    }
+
+    setSpeed(speed) {
+        this.#speed = speed;
     }
     getPosition() {
         return this.#position;
     }
+    getDestination() {
+        return this.#destination;
+    }
     getId() {
         return this.#id;
     }
+
+    setDestination(destination) {
+        this.#destination = destination;
+    }
+
     toString() {
         return `Position : ${this.#position}`;
+    }
+
+    computeNextPosition() {
+        const distanceToTarget = computeDistance(this.getPosition(), this.#destination);
+
+        if (distanceToTarget <= this.#speed) {
+            return this.#destination;
+        }
+        else {
+            return new Coordinates(this.#position.x + Math.floor(((this.#destination.x - this.getPosition().x) * this.#speed) / distanceToTarget),
+            this.#position.y + Math.floor(((this.#destination.y - this.getPosition().y) * this.#speed) / distanceToTarget));
+        }
     }
 }
 
 
 class Human extends Character {
+
     toString() {
         return 'Human - ' + super.toString();
     }
@@ -68,37 +97,27 @@ class Human extends Character {
 exports.Human = Human;
 
 class Zombie extends Character {
-    #destination = null;
-    constructor(position, id, destination) {
-        super(position, id);
-        this.#destination = destination;
-    }
-    getDestination() {
-        return this.#destination;
+    constructor(...args) {
+        super(...args);
+        this.setSpeed(400);
     }
     toString() {
-        return 'Zombie - ' + super.toString() + ` - Destination : ${this.#destination}`;
+        return 'Zombie - ' + super.toString() + ` - Destination : ${this.getDestination()}`;
     }
 }
 exports.Zombie = Zombie;
 
 
 class Player extends Character {
-    #destination = null;
-    constructor(position, id) {
-        super(position, id);
-    }
-    getDestination() {
-        return this.#destination;
-    }
-    setDestination(destination) {
-        this.#destination = destination;
+    constructor(...args) {
+        super(...args);
+        this.setSpeed(1000);
     }
     toString() {
-        return 'Player - ' + super.toString() + ` - Destination : ${this.#destination}`;
+        return 'Player - ' + super.toString() + ` - Destination : ${this.getDestination()}`;
     }
     getOrder() {
-        return `${this.#destination.x} ${this.#destination.y}`;
+        return `${this.getDestination().x} ${this.getDestination().y}`;
     }
 }
 exports.Player = Player;
@@ -125,8 +144,7 @@ while (true && count > 0) {
         const humanId = parseInt(inputs[0]);
         const humanX = parseInt(inputs[1]);
         const humanY = parseInt(inputs[2]);
-        const human = new Human(new Coordinates(humanX, humanY), humanId);
-        humanList.push(human);
+        humanList.push(new Human(new Coordinates(humanX, humanY), humanId));
     }
 
 
@@ -138,13 +156,8 @@ while (true && count > 0) {
         const zombieY = parseInt(inputs[2]);
         const zombieXNext = parseInt(inputs[3]);
         const zombieYNext = parseInt(inputs[4]);
-        const zombie = new Zombie(new Coordinates(zombieX, zombieY), zombieId, new Coordinates(zombieXNext, zombieYNext));
-        zombieList.push(zombie)
+        zombieList.push(new Zombie(new Coordinates(zombieX, zombieY), zombieId, new Coordinates(zombieXNext, zombieYNext)))
     }
-
-    humanList.map(e => console.error(e.toString()));
-    zombieList.map(e => console.error(e.toString()));
-
 
     // Basic algo : only one Zombie, going for it
     let destination = new Coordinates(0, 0)
@@ -152,7 +165,7 @@ while (true && count > 0) {
         destination = zombieList[0].getPosition();
         player.setDestination(destination);
     }
-    else {
+    else if (zombieList.length > 1) {
         // More than ONE Zombie. Dumb algo : still go for the first in the list
         destination = zombieList[0].getPosition();
         player.setDestination(destination);
@@ -160,6 +173,12 @@ while (true && count > 0) {
     }
     player.setDestination(destination);
 
+    //DEBUG : list all relevant data
+    humanList.map(e => console.error(e.toString()));
+    zombieList.map(e => console.error(e.toString()));
+    console.error(player.toString())
+
+    // Output of the game
     console.log(player.getOrder());     // Your destination coordinates
 
 }
