@@ -26,6 +26,10 @@ class Coordinates {
         console.error(`${returnValue} `);
         return returnValue;
     }
+
+    add(coordinates) {
+        return new Coordinates(this.x + coordinates.x, this.y + coordinates.y)
+    }
 }
 exports.Coordinates = Coordinates;
 
@@ -174,11 +178,11 @@ while (true && count > 0) {
     player.setDestination(destination);
 
     //DEBUG : list all relevant data
-    humanList.map(e => console.error(e.toString()));
-    zombieList.map(e => console.error(e.toString()));
-    console.error(player.toString())
+    // humanList.map(e => console.error(e.toString()));
+    // zombieList.map(e => console.error(e.toString()));
+    // console.error(player.toString())
 
     // Output of the game
-    console.log(player.getOrder());     // Your destination coordinates
+    // console.log(player.getOrder());     // Your destination coordinates
 
 }

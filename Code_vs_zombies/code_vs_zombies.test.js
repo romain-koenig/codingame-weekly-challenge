@@ -24,6 +24,12 @@ test('Creating a Human / checking toString()', () => {
     expect(new cvz.Human(new cvz.Coordinates(0, 899), 3).toString()).toStrictEqual('Human - Position : [0 - 899]');
 })
 
+test('Adding 2 coordinates : (5, 30) and (17, -12) -> (22, 18)', () => {
+    const A = new cvz.Coordinates(5, 30);
+    const B = new cvz.Coordinates(17, -12);
+    expect(A.add(B)).toStrictEqual(new cvz.Coordinates(22, 18));
+})
+
 
 test('Creating a Zombie / checking Coordinates', () => {
     expect(new cvz.Zombie(new cvz.Coordinates(12, 37), 6).getPosition()).toStrictEqual(new cvz.Coordinates(12, 37));
@@ -95,6 +101,32 @@ test('Simulate Player next position - Player (0,0) Human H (0, 899) and Zombie Z
 
 
 
+// test('Simulate Zombie next position - Player (0,0) Human H (0, 899) and Zombie Z (544, 98) - GOING RIGHT FOR THE HUMAN (FAR)', () => {
+//     const posH = new cvz.Coordinates(0, 2899);
+//     const posZ = new cvz.Coordinates(2544, 298);
+
+//     const H = new cvz.Human(posH, 1);
+//     const Z = new cvz.Zombie(posZ, 2, H.getPosition());
+
+//     Z.setDestination(H.getPosition());
+//     //console.error(Z.computeNextPosition());
+//     expect(Z.computeNextPosition()).toStrictEqual(new cvz.Coordinates(2544-285, 298+279));
+// })
+
+test('Simulate Zombie next position - Player (0,0) Human H (500, 1000) and Zombie Z (544, 98) - GOING RIGHT FOR THE HUMAN (FAR)', () => {
+    const posH = new cvz.Coordinates(500, 1000);
+    const posZ = new cvz.Coordinates(857, 1715);
+
+    const H = new cvz.Human(posH, 1);
+    const Z = new cvz.Zombie(posZ, 2, H.getPosition());
+
+    Z.setDestination(H.getPosition());
+    console.error(`Next position : ${Z.computeNextPosition()}`);
+    console.error(`Starting distance : ${cvz.computeDistance(posH, posZ)}`)
+    expect(Z.computeNextPosition()).toStrictEqual(new cvz.Coordinates(678, 1357));
+})
+
+
 test('Simulate Zombie next position - Player (0,0) Human H (0, 899) and Zombie Z (544, 98) - GOING RIGHT FOR THE HUMAN (FAR)', () => {
     const posH = new cvz.Coordinates(0, 2899);
     const posZ = new cvz.Coordinates(2544, 298);
@@ -104,5 +136,5 @@ test('Simulate Zombie next position - Player (0,0) Human H (0, 899) and Zombie Z
 
     Z.setDestination(H.getPosition());
     console.error(Z.computeNextPosition());
-    expect(cvz.computeDistance(Z.computeNextPosition(), new cvz.Coordinates(2544 - 285, 298 - 279))).toBeLessThan(20);
+    expect(cvz.computeDistance(Z.computeNextPosition(), posZ.add(new cvz.Coordinates(-285, 279)))).toBeLessThan(8);
 })
