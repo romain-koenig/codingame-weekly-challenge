@@ -40,6 +40,17 @@ test('Creating a Zombie / checking ID', () => {
 test('Creating a Zombie / checking toString()', () => {
     expect(new cvz.Zombie(new cvz.Coordinates(12, 37), 6, new cvz.Coordinates(25, 12)).toString()).toStrictEqual('Zombie - Position : [12 - 37] - Destination : [25 - 12]');
 })
+test('Creating a Zombie / checking TARGET', () => {
+    const posH = new cvz.Coordinates(0, 899);
+    const posZ = new cvz.Coordinates(12, 37);
+    const destZ = new cvz.Coordinates(25, 12);
+    const Z = new cvz.Zombie(posZ, 6, destZ);
+
+    const H = new cvz.Human(posH, 1);
+    Z.setTarget(H)
+
+    expect(Z.getTarget()).toStrictEqual(H);
+})
 
 
 test('Creating a Player / checking Coordinates', () => {
@@ -137,4 +148,67 @@ test('Simulate Zombie next position - Player (0,0) Human H (0, 899) and Zombie Z
     Z.setDestination(H.getPosition());
     console.error(Z.computeNextPosition());
     expect(cvz.computeDistance(Z.computeNextPosition(), posZ.add(new cvz.Coordinates(-285, 279)))).toBeLessThan(8);
+})
+
+
+test('Calculate Closest Human/Player (= Human 2)', () => {
+    const posH1 = new cvz.Coordinates(10, 40);
+    const posH2 = new cvz.Coordinates(20, 40);
+    const posH3 = new cvz.Coordinates(25, 60);
+    const posH4 = new cvz.Coordinates(20, 50);
+
+    const posZ = new cvz.Coordinates(25, 20);
+    const posP = new cvz.Coordinates(0, 20);
+
+    const H1 = new cvz.Human(posH1, 1);
+    const H2 = new cvz.Human(posH2, 2);
+    const H3 = new cvz.Human(posH3, 3);
+    const H4 = new cvz.Human(posH4, 4);
+
+    const humanList = [];
+    humanList.push(H1);
+    humanList.push(H2);
+    humanList.push(H3);
+    humanList.push(H4);
+    const Z = new cvz.Zombie(posZ, 0, H1.getPosition());
+    const P = new cvz.Player(posP, 0);
+
+    const returnValue = Z.computeClosestTarget(humanList, P);
+
+    console.error(returnValue);
+
+    expect(returnValue.getId()).toStrictEqual(H2.getId());
+    expect(returnValue instanceof cvz.Human).toBe(true);
+
+})
+
+test('Calculate Closest Human/Player (= Player)', () => {
+    const posH1 = new cvz.Coordinates(10, 40);
+    const posH2 = new cvz.Coordinates(20, 40);
+    const posH3 = new cvz.Coordinates(25, 60);
+    const posH4 = new cvz.Coordinates(20, 50);
+
+    const posZ = new cvz.Coordinates(25, 20);
+    const posP = new cvz.Coordinates(20, 20);
+
+    const H1 = new cvz.Human(posH1, 1);
+    const H2 = new cvz.Human(posH2, 2);
+    const H3 = new cvz.Human(posH3, 3);
+    const H4 = new cvz.Human(posH4, 4);
+
+    const humanList = [];
+    humanList.push(H1);
+    humanList.push(H2);
+    humanList.push(H3);
+    humanList.push(H4);
+    const Z = new cvz.Zombie(posZ, 0, H1.getPosition());
+    const P = new cvz.Player(posP, 0);
+
+    const returnValue = Z.computeClosestTarget(humanList, P);
+
+    console.error(returnValue);
+
+    expect(returnValue.getId()).toStrictEqual(P.getId());
+    expect(returnValue instanceof cvz.Player).toBe(true);
+
 })

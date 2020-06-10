@@ -86,13 +86,17 @@ class Character {
         }
         else {
             return new Coordinates(this.#position.x + Math.floor(((this.#destination.x - this.getPosition().x) * this.#speed) / distanceToTarget),
-            this.#position.y + Math.floor(((this.#destination.y - this.getPosition().y) * this.#speed) / distanceToTarget));
+                this.#position.y + Math.floor(((this.#destination.y - this.getPosition().y) * this.#speed) / distanceToTarget));
         }
     }
 }
 
 
 class Human extends Character {
+
+    constructor(...args) {
+        super(...args);
+    }
 
     toString() {
         return 'Human - ' + super.toString();
@@ -101,12 +105,39 @@ class Human extends Character {
 exports.Human = Human;
 
 class Zombie extends Character {
+    #target = null;
     constructor(...args) {
         super(...args);
         this.setSpeed(400);
     }
     toString() {
         return 'Zombie - ' + super.toString() + ` - Destination : ${this.getDestination()}`;
+    }
+    setTarget(target) {
+        this.#target = target;
+    }
+    getTarget() {
+        return this.#target;
+    }
+
+    computeClosestTarget(humanList, player) {
+        const distPlayer = computeDistance(this.getPosition(), player.getPosition());
+        let idMin = -1;
+        let distanceMinHuman = Infinity;
+        for (let i = 0; i < humanList.length; i++) {
+            let d = computeDistance(this.getPosition(), humanList[i].getPosition())
+            console.error(`Distance : ${d}`);
+            if (d < distanceMinHuman) {
+                idMin = i;
+                distanceMinHuman = d;
+            }
+        }
+        if (distanceMinHuman < distPlayer) {
+            const h = humanList[idMin];
+            console.error(`returning Human : ${h.toString()}`);
+            return h;
+        }
+        return player;
     }
 }
 exports.Zombie = Zombie;
@@ -175,18 +206,18 @@ while (true && count > 0) {
         // a little less dumb, go where the zombie is going
         destination = zombieList[0].computeNextPosition();
         //No surprise, still same results, wins for every game except 10, 11, 13, 19
-        
+
         player.setDestination(destination);
 
     }
     player.setDestination(destination);
 
     //DEBUG : list all relevant data
-    humanList.map(e => console.error(e.toString()));
-    zombieList.map(e => console.error(e.toString()));
-    console.error(player.toString())
+    // humanList.map(e => console.error(e.toString()));
+    // zombieList.map(e => console.error(e.toString()));
+    // console.error(player.toString())
 
     // Output of the game
-    console.log(player.getOrder());     // Your destination coordinates
+    // console.log(player.getOrder());     // Your destination coordinates
 
 }
