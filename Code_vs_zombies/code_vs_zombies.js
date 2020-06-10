@@ -126,7 +126,6 @@ class Zombie extends Character {
         let distanceMinHuman = Infinity;
         for (let i = 0; i < humanList.length; i++) {
             let d = computeDistance(this.getPosition(), humanList[i].getPosition())
-            console.error(`Distance : ${d}`);
             if (d < distanceMinHuman) {
                 idMin = i;
                 distanceMinHuman = d;
@@ -134,7 +133,6 @@ class Zombie extends Character {
         }
         if (distanceMinHuman < distPlayer) {
             const h = humanList[idMin];
-            console.error(`returning Human : ${h.toString()}`);
             return h;
         }
         return player;
@@ -196,20 +194,29 @@ while (true && count > 0) {
 
     // Basic algo : only one Zombie, going for it
     let destination = new Coordinates(0, 0)
+
     if (zombieList.length === 1) {
         destination = zombieList[0].getPosition();
-        player.setDestination(destination);
     }
     else if (zombieList.length > 1) {
         // More than ONE Zombie. Dumb algo : still go for the first in the list
         //destination = zombieList[0].getPosition();
         // a little less dumb, go where the zombie is going
         destination = zombieList[0].computeNextPosition();
-        //No surprise, still same results, wins for every game except 10, 11, 13, 19
-
-        player.setDestination(destination);
-
+        //No surprise, still same results, wins for every game except 10, 11, 13, 1    
     }
+    
+    // adding a new layer : go to dangerous zombies first
+        
+    zombieList.map(z => z.setTarget(z.computeClosestTarget(humanList, player)));
+    const dangerousZombies = zombieList.filter(z => z.getTarget() !== player);
+    
+    if (dangerousZombies.length > 0) {
+        const z = dangerousZombies[0];
+        console.error(`Going for a dangerous ZOMBIE : ${z}`)
+        destination = z.computeNextPosition();
+    }
+    
     player.setDestination(destination);
 
     //DEBUG : list all relevant data
@@ -218,6 +225,6 @@ while (true && count > 0) {
     // console.error(player.toString())
 
     // Output of the game
-    // console.log(player.getOrder());     // Your destination coordinates
+    console.log(player.getOrder());     // Your destination coordinates
 
 }
