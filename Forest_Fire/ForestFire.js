@@ -27,7 +27,7 @@ const readline = () => {
  **/
 
 const L = parseInt(readline()); // Size of forest map
-const water = parseInt(readline()); // Total amount of water available
+let water = parseInt(readline()); // Total amount of water available
 
 const grid = new Array(L);
 for (let i = 0; i < L; i++) {
@@ -52,7 +52,7 @@ const checkGrid = (grid, brigade, x, y) => {
         default:
             break;
     }
-    console.error(`Will check for ${brigade} in grid[${x}][${y}]`)
+    console.error(`Will check for ${brigade} in grid[${x}][${y}] - max = ${max}`)
     for (let k = 0; k < max; k++) {
         for (let l = 0; l < max; l++) {
             if (grid[x + k][y + l] > 0) {
@@ -61,7 +61,7 @@ const checkGrid = (grid, brigade, x, y) => {
         }
     }
 
-    if (fires > max) {
+    if (fires >= max) {
         console.error(`SEEMS FINE for ${brigade} in [${x}][${y}]!`)
         return true;
     }
@@ -96,29 +96,50 @@ while (true && count > 0) {
         console.error(grid[i].join(' '));
     }
 
+    let actionDone = false;
+
+
+    const canadairCapacity = 2100;
+    const helicopterCapacity = 1200;
+    const squadCapacity = 600;
 
     for (let i = 0; i < L - 2; i++) {
         for (let j = 0; j < L - 2; j++) {
-            const canadairCapacity = 2100;
-            const helicopterCapacity = 1200;
-            const squadCapacity = 600;
-            
-            if (checkGrid(grid, "CANADAIR", i, j) && water >= canadairCapacity) {
+
+            if (!actionDone && checkGrid(grid, "CANADAIR", i, j) && water >= canadairCapacity) {
                 console.log(`C ${i} ${j}`);
                 water -= canadairCapacity;
-            }
-
-            if (checkGrid(grid, "HELICOPTER", i, j) && water >= helicopterCapacity) {
-                console.log(`H ${i} ${j}`);
-                water -= helicopterCapacity;
-            }
-
-            if (checkGrid(grid, "SQUAD", i, j) && water >= squadCapacity) {
-                console.log(`J ${i} ${j}`);
-                water -= squadCapacity;
+                actionDone = true;
             }
         }
     }
+
+    for (let i = 0; i < L - 1; i++) {
+        for (let j = 0; j < L - 1; j++) {
+
+            if (!actionDone && checkGrid(grid, "HELICOPTER", i, j) && water >= helicopterCapacity) {
+                console.log(`H ${i} ${j}`);
+                water -= helicopterCapacity;
+                actionDone = true;
+            }
+        }
+    }
+
+
+    for (let i = 0; i < L; i++) {
+        for (let j = 0; j < L; j++) {
+
+
+            if (!actionDone && checkGrid(grid, "SQUAD", i, j) && water >= squadCapacity) {
+                console.log(`J ${i} ${j}`);
+                water -= squadCapacity;
+                actionDone = true;
+            }
+        }
+    }
+
+
+
 
 
     // Write the vehicle first letter (C=Canadair, H=Helicopter, J=SmokeJumpers) followed by the coordinates separated by a space
