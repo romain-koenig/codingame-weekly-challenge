@@ -212,7 +212,7 @@ while (true && count > 0) {
     const dangerousZombies = zombieList.filter(z => z.getTarget() !== player);
     
     if (dangerousZombies.length > 0) {
-        const z = dangerousZombies[0];
+        const z = dangerousZombies[dangerousZombies.length - 1];
         console.error(`Going for a dangerous ZOMBIE : ${z}`)
         destination = z.computeNextPosition();
     }
