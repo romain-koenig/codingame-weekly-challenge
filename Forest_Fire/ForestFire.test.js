@@ -7,29 +7,37 @@ test('DOING NOTHING - JEST needs at least ONE test', () => {
 )
 
 const fireGrid = [
-    [0, 0, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, 0, 0],
-    [0, 1, 1, 1, 0, 0],
-    [0, 1, 0, 0, 1, 0],
-    [0, 0, 0, 0, 1, 1]
-    ]
+    [{ fire: false }, { fire: false }, { fire: false }, { fire: false }, { fire: false }, { fire: true }],
+    [{ fire: false }, { fire: false }, { fire: false }, { fire: false }, { fire: false }, { fire: false }],
+    [{ fire: false }, { fire: false }, { fire: false }, { fire: true }, { fire: false }, { fire: false }],
+    [{ fire: false }, { fire: true }, { fire: true }, { fire: true }, { fire: false }, { fire: false }],
+    [{ fire: false }, { fire: true }, { fire: false }, { fire: false }, { fire: true }, { fire: false }],
+    [{ fire: false }, { fire: false }, { fire: false }, { fire: false }, { fire: true }, { fire: true }]
+]
     ;
 
-test('Is Canadair a good choice in [0][0] ? (false)', () => {
-    expect(ff.checkGrid(fireGrid, "CANADAIR", 0, 0)).toBe(false);
+test('Is Canadair a good choice in [0][0] ? (no fires)', () => {
+    expect(ff.checkGrid(fireGrid, "CANADAIR", 0, 0)).toEqual(0);
 }
 )
 
-test('Is Canadair a good choice in [0][0] ? (true)', () => {
-    expect(ff.checkGrid(fireGrid, "CANADAIR", 3, 3)).toBe(true);
+test('Is Canadair a good choice in [3][3] ? (4 fires)', () => {
+    expect(ff.checkGrid(fireGrid, "CANADAIR", 3, 3)).toEqual(4);
 }
 )
-test('Is Helicopter a good choice in [1][3] ? (true)', () => {
-    expect(ff.checkGrid(fireGrid, "HELICOPTER", 3, 1)).toBe(true);
+test('Is Helicopter a good choice in [1][3] ? (3 fires)', () => {
+    expect(ff.checkGrid(fireGrid, "HELICOPTER", 3, 1)).toEqual(3);
 }
 )
-test('Is Helicopter a good choice in [0][0] ? (false)', () => {
-    expect(ff.checkGrid(fireGrid, "HELICOPTER", 0, 0)).toBe(false);
+test('Is Helicopter a good choice in [0][0] ? (no fires)', () => {
+    expect(ff.checkGrid(fireGrid, "HELICOPTER", 0, 0)).toEqual(0);
+}
+)
+test('Is a squad a good choice in [5][5] ? (one fire)', () => {
+    expect(ff.checkGrid(fireGrid, "SQUAD", 5, 5)).toEqual(1);
+}
+)
+test('Is a squad a good choice in [5][5] ? (no fires)', () => {
+    expect(ff.checkGrid(fireGrid, "SQUAD", 0, 0)).toEqual(0);
 }
 )

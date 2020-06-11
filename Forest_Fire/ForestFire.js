@@ -22,22 +22,20 @@ const readline = () => {
     }
 }
 
-/**
- * Send your available units to put out those fires! Watch out for water supplies!
- **/
 
-const L = parseInt(readline()); // Size of forest map
-let water = parseInt(readline()); // Total amount of water available
+// ██╗   ██╗████████╗██╗██╗     ██╗████████╗██╗███████╗███████╗
+// ██║   ██║╚══██╔══╝██║██║     ██║╚══██╔══╝██║██╔════╝██╔════╝
+// ██║   ██║   ██║   ██║██║     ██║   ██║   ██║█████╗  ███████╗
+// ██║   ██║   ██║   ██║██║     ██║   ██║   ██║██╔══╝  ╚════██║
+// ╚██████╔╝   ██║   ██║███████╗██║   ██║   ██║███████╗███████║
+//  ╚═════╝    ╚═╝   ╚═╝╚══════╝╚═╝   ╚═╝   ╚═╝╚══════╝╚══════╝
 
-const grid = new Array(L);
-for (let i = 0; i < L; i++) {
-    grid[i] = new Array(L)
-}
 
 const checkGrid = (grid, brigade, x, y) => {
 
     let fires = 0;
     let max = 0;
+
     switch (brigade) {
         case "CANADAIR":
             max = 3
@@ -55,29 +53,62 @@ const checkGrid = (grid, brigade, x, y) => {
     console.error(`Will check for ${brigade} in grid[${x}][${y}] - max = ${max}`)
     for (let k = 0; k < max; k++) {
         for (let l = 0; l < max; l++) {
-            if (grid[x + k][y + l] > 0) {
+            if (grid[x + k][y + l].fire === true) {
+                console.error(`found a fire to extinguish`);
                 fires++;
             }
         }
     }
 
-    if (fires >= max) {
-        console.error(`SEEMS FINE for ${brigade} in [${x}][${y}]!`)
-        return true;
-    }
-    return false;
+    return fires;
 }
 exports.checkGrid = checkGrid;
 
+
+// ██╗███╗   ██╗██╗████████╗
+// ██║████╗  ██║██║╚══██╔══╝
+// ██║██╔██╗ ██║██║   ██║   
+// ██║██║╚██╗██║██║   ██║   
+// ██║██║ ╚████║██║   ██║   
+// ╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝   
+
+/**
+ * Send your available units to put out those fires! Watch out for water supplies!
+ **/
+
+const L = parseInt(readline()); // Size of forest map
+let water = parseInt(readline()); // Total amount of water available
+
+const grid = new Array(L);
+for (let i = 0; i < L; i++) {
+    grid[i] = new Array(L)
+}
+
+
+
 let count = 30;
-// game loop
+
+
+//  ██████╗  █████╗ ███╗   ███╗███████╗    ██╗      ██████╗  ██████╗ ██████╗ 
+// ██╔════╝ ██╔══██╗████╗ ████║██╔════╝    ██║     ██╔═══██╗██╔═══██╗██╔══██╗
+// ██║  ███╗███████║██╔████╔██║█████╗      ██║     ██║   ██║██║   ██║██████╔╝
+// ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝      ██║     ██║   ██║██║   ██║██╔═══╝ 
+// ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗    ███████╗╚██████╔╝╚██████╔╝██║     
+//  ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝    ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝     
+
+
 while (true && count > 0) {
 
     count--;
     //reinit game grid
     for (let i = 0; i < L; i++) {
         for (let j = 0; j < L; j++) {
-            grid[i][j] = 0;
+            grid[i][j] = {
+                fire: false,
+                canadair: 0,
+                helicopter: 0,
+                squad: 0
+            };
         }
     }
 
@@ -88,12 +119,12 @@ while (true && count > 0) {
         var inputs = readline().split(' ');
         const fireX = parseInt(inputs[0]); // X coordinate of fire
         const fireY = parseInt(inputs[1]); // Y coordinate of fire
-        grid[fireX][fireY] = 1
+        grid[fireX][fireY].fire = true
     }
 
     //Print the fire grid for debug purpose
     for (let i = 0; i < L; i++) {
-        console.error(grid[i].join(' '));
+        console.error(grid[i].map(e => e.fire).join(' '));
     }
 
     let actionDone = false;
@@ -137,8 +168,6 @@ while (true && count > 0) {
             }
         }
     }
-
-
 
 
 
