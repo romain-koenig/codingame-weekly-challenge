@@ -23,6 +23,7 @@ const readline = () => {
 }
 
 
+
 // ██╗   ██╗████████╗██╗██╗     ██╗████████╗██╗███████╗███████╗
 // ██║   ██║╚══██╔══╝██║██║     ██║╚══██╔══╝██║██╔════╝██╔════╝
 // ██║   ██║   ██║   ██║██║     ██║   ██║   ██║█████╗  ███████╗
@@ -86,7 +87,7 @@ for (let i = 0; i < L; i++) {
 
 
 
-let count = 30;
+let count = 300;
 
 
 //  ██████╗  █████╗ ███╗   ███╗███████╗    ██╗      ██████╗  ██████╗ ██████╗ 
@@ -113,9 +114,9 @@ while (true && count > 0) {
     }
 
     // Setup the grid
-    const N = parseInt(readline()); // Amount of fires
+    let givenNumberOfFires = parseInt(readline()); // Amount of fires
 
-    for (let i = 0; i < N; i++) {
+    for (let i = 0; i < givenNumberOfFires; i++) {
         var inputs = readline().split(' ');
         const fireX = parseInt(inputs[0]); // X coordinate of fire
         const fireY = parseInt(inputs[1]); // Y coordinate of fire
@@ -134,40 +135,71 @@ while (true && count > 0) {
     const helicopterCapacity = 1200;
     const squadCapacity = 600;
 
+    let canadairMax = 0;
+    let helicopterMax = 0;
+    let squadMax = 0;
+
+    let canadairMaxX = 0;
+    let canadairMaxY = 0;
+    let helicopterMaxX = 0;
+    let helicopterMaxY = 0;
+    let squadMaxX = 0;
+    let squadMaxY = 0;
+
     for (let i = 0; i < L - 2; i++) {
         for (let j = 0; j < L - 2; j++) {
-
-            if (!actionDone && checkGrid(grid, "CANADAIR", i, j) && water >= canadairCapacity) {
-                console.log(`C ${i} ${j}`);
-                water -= canadairCapacity;
-                actionDone = true;
+            let canadairHere = checkGrid(grid, "CANADAIR", i, j);
+            grid[i][j].canadair = canadairHere;
+            if (canadairHere > canadairMax) {
+                canadairMax = canadairHere;
+                canadairMaxX = i;
+                canadairMaxY = j;
             }
         }
     }
 
     for (let i = 0; i < L - 1; i++) {
         for (let j = 0; j < L - 1; j++) {
+            let helicopterHere = checkGrid(grid, "HELICOPTER", i, j);
+            grid[i][j].helicopter = helicopterHere
+            if (helicopterHere > helicopterMax) {
+                helicopterMax = helicopterHere;
+                helicopterMaxX = i;
+                helicopterMaxY = j;
 
-            if (!actionDone && checkGrid(grid, "HELICOPTER", i, j) && water >= helicopterCapacity) {
-                console.log(`H ${i} ${j}`);
-                water -= helicopterCapacity;
-                actionDone = true;
             }
         }
     }
-
 
     for (let i = 0; i < L; i++) {
         for (let j = 0; j < L; j++) {
+            let squadHere = checkGrid(grid, "SQUAD", i, j);
+            grid[i][j].squad = squadHere;
+            if (squadHere > squadMax) {
+                squadMax = squadHere;
+                squadMaxX = i;
+                squadMaxY = j;
 
-
-            if (!actionDone && checkGrid(grid, "SQUAD", i, j) && water >= squadCapacity) {
-                console.log(`J ${i} ${j}`);
-                water -= squadCapacity;
-                actionDone = true;
             }
         }
     }
+
+    if (canadairMax > 4 && water >= canadairCapacity) {
+        console.log(`C ${canadairMaxX} ${canadairMaxY}`);
+        givenNumberOfFires -= canadairMax;
+    }
+
+    else if (helicopterMax > 2 && water >= helicopterCapacity) {
+        console.log(`H ${helicopterMaxX} ${helicopterMaxY}`);
+        givenNumberOfFires -= helicopterMax;
+    }
+
+    else if (squadMax > 0 && water >= squadCapacity) {
+        console.log(`J ${squadMaxX} ${squadMaxY}`);
+        givenNumberOfFires -= squadMax;
+    }
+
+
 
 
 
