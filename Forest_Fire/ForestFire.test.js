@@ -7,12 +7,12 @@ test('DOING NOTHING - JEST needs at least ONE test', () => {
 )
 
 const fireGrid = [
-    [{ fire: false }, { fire: false }, { fire: false }, { fire: false }, { fire: false }, { fire: true }],
-    [{ fire: false }, { fire: false }, { fire: false }, { fire: false }, { fire: false }, { fire: false }],
-    [{ fire: false }, { fire: false }, { fire: false }, { fire: true }, { fire: false }, { fire: false }],
-    [{ fire: false }, { fire: true }, { fire: true }, { fire: true }, { fire: false }, { fire: false }],
-    [{ fire: false }, { fire: true }, { fire: false }, { fire: false }, { fire: true }, { fire: false }],
-    [{ fire: false }, { fire: false }, { fire: false }, { fire: false }, { fire: true }, { fire: true }]
+    [false, false, false, false, false, true],
+    [false, false, false, false, false, false],
+    [false, false, false, true, false, false],
+    [false, true, true, true, false, false],
+    [false, true, false, false, true, false],
+    [false, false, false, false, true, true]
 ]
     ;
 
