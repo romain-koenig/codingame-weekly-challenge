@@ -32,38 +32,59 @@ const readline = () => {
 //  ╚═════╝    ╚═╝   ╚═╝╚══════╝╚═╝   ╚═╝   ╚═╝╚══════╝╚══════╝
 
 
-const checkGrid = (grid, brigade, x, y) => {
+const BRIGADES = {
+    CANADAIR: {
+        NAME: "CANADAIR",
+        USEFULLNESS: 6,
+        GRIDSIZE: 3,
+        WATERCAPACITY: 1500,
+    },
+    HELICOPTER: {
+        NAME: "HELICOPTER",
+        USEFULLNESS: 3,
+        GRIDSIZE: 2,
+        WATERCAPACITY: 1500,
+    },
+    SQUAD: {
+        NAME: "SQUAD",
+        USEFULLNESS: 1,
+        GRIDSIZE: 1,
+        WATERCAPACITY: 1500,
+    },
+}
+exports.BRIGADES = BRIGADES;
 
-    let fires = 0;
-    let max = 0;
+const checkHowManyFiresPossible = (grid, brigade, x, y) => {
 
-    switch (brigade) {
-        case "CANADAIR":
-            max = 3
-            break;
-        case "HELICOPTER":
-            max = 2
-            break;
-        case "SQUAD":
-            max = 1
-            break;
+    let firesThaCanBeExtinguishedHere = 0;
 
-        default:
-            break;
-    }
-    console.error(`Will check for ${brigade} in grid[${x}][${y}] - max = ${max}`)
-    for (let k = 0; k < max; k++) {
-        for (let l = 0; l < max; l++) {
+    //console.error(`Will check for ${brigade.NAME} in grid[${x}][${y}] - size = ${brigade.GRIDSIZE}`)
+    for (let k = 0; k < brigade.GRIDSIZE; k++) {
+        for (let l = 0; l < brigade.GRIDSIZE; l++) {
             if (grid[x + k][y + l].fire === true) {
-                console.error(`found a fire to extinguish`);
-                fires++;
+                //console.error(`found a fire to extinguish`);
+                firesThaCanBeExtinguishedHere++;
             }
         }
     }
 
-    return fires;
+    return firesThaCanBeExtinguishedHere;
 }
-exports.checkGrid = checkGrid;
+exports.checkHowManyFiresPossible = checkHowManyFiresPossible;
+
+
+function findBestSpot(canadair, brigade) {
+    for (let i = 0; i < L - brigade.GRIDSIZE + 1; i++) {
+        for (let j = 0; j < L - brigade.GRIDSIZE + 1; j++) {
+            let firesExtinguishedHere = checkHowManyFiresPossible(grid, brigade, i, j);
+            if (firesExtinguishedHere > canadair.bestNbOfFires) {
+                canadair.bestNbOfFires = firesExtinguishedHere;
+                canadair.bestX = i;
+                canadair.bestY = j;
+            }
+        }
+    }
+}
 
 
 // ██╗███╗   ██╗██╗████████╗
@@ -105,16 +126,13 @@ while (true && count > 0) {
     for (let i = 0; i < L; i++) {
         for (let j = 0; j < L; j++) {
             grid[i][j] = {
-                fire: false,
-                canadair: 0,
-                helicopter: 0,
-                squad: 0
+                fire: false
             };
         }
     }
 
     // Setup the grid
-    let givenNumberOfFires = parseInt(readline()); // Amount of fires
+    const givenNumberOfFires = parseInt(readline()); // Amount of fires
 
     for (let i = 0; i < givenNumberOfFires; i++) {
         var inputs = readline().split(' ');
@@ -124,84 +142,58 @@ while (true && count > 0) {
     }
 
     //Print the fire grid for debug purpose
-    for (let i = 0; i < L; i++) {
-        console.error(grid[i].map(e => e.fire).join(' '));
+    // for (let i = 0; i < L; i++) {
+    //     console.error(grid[i].map(e => e.fire).join(' '));
+    // }
+
+    class fireBrigade {
+        bestNbOfFires = 0;
+        bestX = 0;
+        bestY = 0;
     }
 
-    let actionDone = false;
+    let canadair = new fireBrigade();
+    let helicopter = new fireBrigade();
 
 
-    const canadairCapacity = 2100;
-    const helicopterCapacity = 1200;
-    const squadCapacity = 600;
-
-    let canadairMax = 0;
-    let helicopterMax = 0;
     let squadMax = 0;
 
-    let canadairMaxX = 0;
-    let canadairMaxY = 0;
-    let helicopterMaxX = 0;
-    let helicopterMaxY = 0;
+
     let squadMaxX = 0;
     let squadMaxY = 0;
 
-    for (let i = 0; i < L - 2; i++) {
-        for (let j = 0; j < L - 2; j++) {
-            let canadairHere = checkGrid(grid, "CANADAIR", i, j);
-            grid[i][j].canadair = canadairHere;
-            if (canadairHere > canadairMax) {
-                canadairMax = canadairHere;
-                canadairMaxX = i;
-                canadairMaxY = j;
-            }
-        }
-    }
+    findBestSpot(canadair, BRIGADES.CANADAIR);
 
-    for (let i = 0; i < L - 1; i++) {
-        for (let j = 0; j < L - 1; j++) {
-            let helicopterHere = checkGrid(grid, "HELICOPTER", i, j);
-            grid[i][j].helicopter = helicopterHere
-            if (helicopterHere > helicopterMax) {
-                helicopterMax = helicopterHere;
-                helicopterMaxX = i;
-                helicopterMaxY = j;
+    findBestSpot(helicopter, BRIGADES.HELICOPTER);
 
-            }
-        }
-    }
 
     for (let i = 0; i < L; i++) {
         for (let j = 0; j < L; j++) {
-            let squadHere = checkGrid(grid, "SQUAD", i, j);
-            grid[i][j].squad = squadHere;
+            let squadHere = checkHowManyFiresPossible(grid, BRIGADES.SQUAD, i, j);
             if (squadHere > squadMax) {
                 squadMax = squadHere;
                 squadMaxX = i;
                 squadMaxY = j;
-
             }
         }
     }
 
-    if (canadairMax > 4 && water >= canadairCapacity) {
-        console.log(`C ${canadairMaxX} ${canadairMaxY}`);
-        givenNumberOfFires -= canadairMax;
+    if (canadair.bestNbOfFires >= BRIGADES.CANADAIR.USEFULLNESS &&
+        water >= BRIGADES.CANADAIR.WATERCAPACITY) {
+        console.log(`C ${canadair.bestX} ${canadair.bestY}`);
     }
 
-    else if (helicopterMax > 2 && water >= helicopterCapacity) {
-        console.log(`H ${helicopterMaxX} ${helicopterMaxY}`);
-        givenNumberOfFires -= helicopterMax;
+    else if (helicopter.bestNbOfFires >= BRIGADES.HELICOPTER.USEFULLNESS
+        && water >= BRIGADES.HELICOPTER.WATERCAPACITY) {
+        console.log(`H ${helicopter.bestX} ${helicopter.bestY}`);
     }
 
-    else if (squadMax > 0 && water >= squadCapacity) {
+    else if (squadMax >= BRIGADES.SQUAD.USEFULLNESS
+        && water >= BRIGADES.SQUAD.WATERCAPACITY) {
         console.log(`J ${squadMaxX} ${squadMaxY}`);
-        givenNumberOfFires -= squadMax;
     }
-
-
-
-
 
     // Write the vehicle first letter (C=Canadair, H=Helicopter, J=SmokeJumpers) followed by the coordinates separated by a space
 }
+
+
