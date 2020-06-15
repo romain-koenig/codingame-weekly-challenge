@@ -54,9 +54,8 @@ const headValues = readline().split('  ');
 //reading the game grid
 const gameGrid = [];
 
-for (let i = 0; i < H; i++) {
-    const line = readline().replace("  ", " ").replace("--", "-");
-    console.error(line);
+for (let i = 0; i < H - 2; i++) {
+    const line = readline().replace(/  /g, " ").replace(/--/g, "-");
     gameGrid.push(line);
 }
 
@@ -68,6 +67,7 @@ const downValues = readline().split('  ');
 // To debug: console.error('Debug messages...');
 let answer = [];
 
+gameGrid.map(e => console.error(e));
 answer.map(e => console.log(e));
 
 
@@ -78,18 +78,23 @@ test('DOING NOTHING - JEST needs at least ONE test', () => {
 
 
 test('Testing header values', () => {
-    const expectedHederValues = ["A", "B", "C"]
+    const expectedHederValues = ["A", "B", "C"];
     expect(headValues).toStrictEqual(expectedHederValues);
 }
 )
+test('Testing ground values', () => {
+    const expectedGroundValues = ["1", "2", "3"];
+    expect(downValues).toStrictEqual(expectedGroundValues);
+}
+)
 
-test('Testing groung values', () => {
-    const expectedDownValues = [["| | |"],
-    ["|-| |"],
-    ["| |-|"],
-    ["| |-|"],
-    ["| | |"]];
-    expect(downValues).toStrictEqual(expectedDownValues);
+test('Testing grid values', () => {
+    const expectedGridValues = ["| | |",
+        "|-| |",
+        "| |-|",
+        "| |-|",
+        "| | |"];
+    expect(gameGrid).toStrictEqual(expectedGridValues);
 }
 )
 
