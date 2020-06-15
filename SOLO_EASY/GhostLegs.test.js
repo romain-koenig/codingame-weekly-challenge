@@ -76,26 +76,41 @@ const size = gameGrid.length;
 const width = headValues.length
 let chemins = [];
 for (let i = 0; i < size; i++) {
-    let chemin = new Array(0, 0, 0);
+    let chemin = new Array(width);
+    chemin.fill(0);
 
     chemins.push(chemin);
 
     for (let j = 0; j < width - 1; j++) {
-        console.error(`i - ${i}, j - ${j}`);
         let currentChar = gameGrid[i].substring(2 * j + 1, 2 * j + 2);
-        console.error(currentChar);
         if (currentChar === "-") {
-            console.error(`CurrentChar is -`)
-            console.error(chemins);
             chemins[i][j] = 1;
             chemins[i][j + 1] = -1;
         }
     }
 }
 
+//Now that we have the paths, calculate answer
+
+const answer = [];
+
+for (let i = 0; i < headValues.length; i++) {
+    let firstChar = headValues[i];
+    let lastChar = "X";
+    let currentIndex = i
+    for (let j = 0; j < chemins.length; j++) {
+        console.error(`i - ${i}, j - ${j}, currentIndex - ${currentIndex}`)
+        console.error(chemins[j])
+        currentIndex += chemins[j][currentIndex];
+        lastChar = downValues[currentIndex];
+
+    }
+    answer.push(firstChar + lastChar)
+    console.error(' ')
+}
 // Write an answer using console.log()
 // To debug: console.error('Debug messages...');
-let answer = [];
+
 
 gameGrid.map(e => console.error(e));
 chemins.map(e => console.error(e));
