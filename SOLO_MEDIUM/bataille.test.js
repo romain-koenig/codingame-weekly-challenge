@@ -1,160 +1,251 @@
-import sys
-import math
+let line = 0;
+const readline = () => {
+    line++;
+    switch (line) {
+        case 1:
+            return "3";
+            break;
+        case 2:
+            return "AD";
+            break;
+        case 3:
+            return "KC";
+            break;
+        case 4:
+            return "QC";
+            break;
+        case 5:
+            return "3";
+            break;
+        case 6:
+            return "KH";
+            break;
+        case 7:
+            return "QS";
+            break;
+        case 8:
+            return "JC";
+            break;
+        default:
+            break;
+    }
+}
 
-# Auto-generated code below aims at helping you parse
-# the standard input according to the problem statement.
 
-class Card:
+// ██████╗ ███████╗ ██████╗ ██╗███╗   ██╗
+// ██╔══██╗██╔════╝██╔════╝ ██║████╗  ██║
+// ██████╔╝█████╗  ██║  ███╗██║██╔██╗ ██║
+// ██╔══██╗██╔══╝  ██║   ██║██║██║╚██╗██║
+// ██████╔╝███████╗╚██████╔╝██║██║ ╚████║
+// ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝
 
-    def __init__(self, card):
-        decoupage = list(card)
-        if len(decoupage) >= 3:
-            decoupage[0] = decoupage[0] + decoupage[1]
-            self.color = decoupage[2]
-        else:
-            self.color = decoupage[1]
-        
-        if decoupage[0] not in ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]:
-            print("ERROR")
-            
-        if decoupage[0] in ["2", "3", "4", "5", "6", "7", "8", "9", "10"]:
-            self.value = int(decoupage[0])
-        elif decoupage[0] == "J":
-            self.value = 11
-        elif decoupage[0] == "Q":
-            self.value = 12
-        elif decoupage[0] == "K":
-            self.value = 13
-        elif decoupage[0] == "A":
-            self.value = 14    
-        else :
-            print("ERROR - ERROR")
 
+const cardWarValues = {
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    7: 7,
+    8: 8,
+    9: 9,
+    10: 10,
+    J: 11,
+    Q: 12,
+    K: 13,
+    A: 14,
+};
+
+const cardTextValues = {
+    2: "2,",
+    3: "3,",
+    4: "4,",
+    5: "5,",
+    6: "6,",
+    7: "7,",
+    8: "8,",
+    9: "9,",
+    10: "10",
+    J: "Jest",
+    Q: "Queen",
+    K: "King",
+    A: "Ace",
+};
+
+const cardColors = {
+    C: "Club",
+    S: "Spade",
+    D: "Diamond",
+    H: "Heart"
+}
+
+
+
+
+class Card {
+    warValue = 0;
+    color = "ERROR";
+    faceValue = "ERROR"
+
+    constructor(value, color) {
+        this.faceValue = cardTextValues[value];
+        this.warValue = cardWarValues[value];
+        this.color = cardColors[color];
+    }
+
+    toString() {
+        return `${this.faceValue} of ${this.color}`;
+    }
+}
+
+class Deck {
+    #deck = [];
+    #defausse = [];
+    #cardInGame = null;
+
+    constructor(deck) {
+        this.#deck = deck;
+    }
+
+    pioche() {
+        this.#cardInGame = this.#deck.shift();
+        return this.#cardInGame;
+    }
+
+    discard(number) {
+        for (let i = 0; i < number; i++) {
+            this.#defausse.push(this.#deck.pop());
+        }
+    }
+
+    discardThree() {
+        this.discard(3);
+    }
+    toString() {
+        let deckDescription = [];
+        for (let i = 0; i < this.#deck.length; i++) {
+            deckDescription.push(this.#deck[i]);
+        }
+        return deckDescription.join(" - ");
+    }
+}
+
+const battle = (card1, card2) => {
+    console.error(`Battle between Card1 : ${card1} - Card2 : ${card2}`);
     
-    def get_value(self):
-        return self.value
-        
-    def __str__(self):
-        return str(self.value) + " " + self.color
+    console.error(`Card1.warValue - ${card1.warValue}`);
+    console.error(`Card2.warValue - ${card2.warValue}`);
 
-class Queue:
-    """A sample implementation of a First-In-First-Out
-       data structure."""
-    def __init__(self):
-        self.in_stack = []
-        self.out_stack = []
+    const winningCard = card1.warValue > card2.warValue ? 1 : (card2.warValue > card1.warValue ? 2 : 0);
+    const draw = card1.warValue === card2.warValue ? true : false;
+    return {
+        winningCard: winningCard,
+        draw: draw
+    };
+}
 
-    def is_empty(self):
-        if len(self.in_stack) + len(self.out_stack) == 0:
-            return True
-        else:
-            return False
-            
-    def push(self, obj):
-        self.in_stack.append(obj)
-    def pop(self):
-        if not self.out_stack:
-            self.in_stack.reverse()
-            self.out_stack = self.in_stack
-            self.in_stack = []
-        return self.out_stack.pop()
-    
-    def __str__(self):
-        output = ""
-        for i in range(len(self.in_stack)):
-            output += str(self.in_stack[i]) + " "
-        return output
-        
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
 
+const startingDeck1 = [];
+const startingDeck2 = [];
+
+const n = parseInt(readline()); // the number of cards for player 1
+for (let i = 0; i < n; i++) {
+    const card = readline().split(''); // the n cards of player 1
+    const cardP1 = new Card(card[0], card[1]);
+    startingDeck1.push(cardP1);
+    console.error(`Card P1 : ${cardP1.toString()}`);
+}
+const m = parseInt(readline()); // the number of cards for player 2
+for (let i = 0; i < m; i++) {
+    const card = readline().split(''); // the m cards of player 2
+    const cardP2 = new Card(card[0], card[1]);
+    startingDeck2.push(new Card(card[0], card[1]));
+    console.error(`Card P2 : ${cardP2.toString()}`);
+}
 
 
+const deck1 = new Deck(startingDeck1.copyWithin());
+const deck2 = new Deck(startingDeck2.copyWithin());
 
+//GAME LOOP STARTS HERE
 
-def combat(player1_stack, player2_stack, tempStack1=None, tempStack2=None):
-    
-    
-    
-    if tempStack1==None : tempStack1 = Queue()
-    if tempStack2==None : tempStack2 = Queue()
+gameOn = true;
+while (gameOn) {
 
-    if not player1_stack.is_empty():
-        cardp_1 = player1_stack.pop()
-    else:
-        return
-    
-    if not player2_stack.is_empty():
-        cardp_2 = player2_stack.pop()
-    else:
-        return   
-    
+    console.error(deck1.toString());
+    card1 = deck1.pioche();
+    card2 = deck2.pioche();
+    console.error(deck1.toString());
 
-    if cardp_1.get_value() > cardp_2.get_value() :
-        print(str(cardp_1) + " better than " + str(cardp_2) + " P1 Wins", file=sys.stderr)
-        player1_stack.push(cardp_1)
-        player1_stack.push(cardp_2)
-        
-    
-    elif cardp_1.get_value() < cardp_2.get_value() : 
-        print(str(cardp_2) + " better than " + str(cardp_1) + " P2 Wins", file=sys.stderr)
-        player2_stack.push(cardp_1)
-        player2_stack.push(cardp_2)
-        
-    else :
-        print("BATAILLE", file=sys.stderr)
-        tempStack1.push(cardp_1)
-        tempStack2.push(cardp_2)
-        for i in range(3):
-            if not player1_stack.is_empty() and not player2_stack.is_empty():
-                tempStack1.push(player1_stack.pop())
-                tempStack2.push(player2_stack.pop())
-            else :
-                print("PAT")
-        combat(player1_stack, player2_stack, tempStack1, tempStack2)
-        
-        
+    gameOn = false;
+}
 
 
 
-player1_stack = Queue()
-player2_stack = Queue()
-
-n = int(input())  # the number of cards for player 1
-for i in range(n):
-    cardp_1 = Card(input())  # the n cards of player 1
-    player1_stack.push(cardp_1)
-    
-m = int(input())  # the number of cards for player 2
-for i in range(m):
-    cardp_2 = Card(input())  # the m cards of player 2
-    player2_stack.push(cardp_2)
-    
-in_progress = True
-
-game_turns = 0
-game_win = 0
-
-while in_progress:
-    # Game here
-    
-    game_turns += 1
-    
-    combat(player1_stack, player2_stack)
+// ███████╗███╗   ██╗██████╗ 
+// ██╔════╝████╗  ██║██╔══██╗
+// █████╗  ██╔██╗ ██║██║  ██║
+// ██╔══╝  ██║╚██╗██║██║  ██║
+// ███████╗██║ ╚████║██████╔╝
+// ╚══════╝╚═╝  ╚═══╝╚═════╝ 
 
 
-    if player1_stack.is_empty():
-        game_win = 2
-        in_progress = False
-
-    if player2_stack.is_empty():
-        game_win = 1
-        in_progress = False
 
 
-print(player1_stack, file=sys.stderr)
-print(player2_stack, file=sys.stderr)
+test('DOING NOTHING - JEST needs at least ONE test', () => {
+    expect(true).toBe(true);
+}
+)
 
-# Write an action using print
-# To debug: print("Debug messages...", file=sys.stderr)
 
-print(str(game_win) + " " + str(game_turns))
+test('Starting Deck - toString()', () => {
+    const _deck1 = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
+    expect(_deck1.toString()).toStrictEqual("Ace of Diamond - King of Club - Queen of Club");
+})
 
+
+test('Pioche : get the right card, have the right deck afterwards', () => {
+    const deck = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
+
+    expect(deck.pioche()).toStrictEqual(new Card('A', 'D'));
+    expect(deck).toStrictEqual(new Deck([new Card('K', 'C'), new Card('Q', 'C')]));
+})
+
+test('Battle - card1 should win', () => {
+    const card1 = new Card("A", "C");
+    const card2 = new Card("10", "D");
+
+    expect(battle(card1, card2)).toStrictEqual(
+        {
+            winningCard: 1,
+            draw: false
+        }
+    );
+})
+test('Battle - card2 should win', () => {
+    const card1 = new Card("7", "H");
+    const card2 = new Card("8", "S");
+
+    expect(battle(card1, card2)).toStrictEqual(
+        {
+            winningCard: 2,
+            draw: false
+        }
+    );
+})
+
+test('Battle - should be a draw', () => {
+    const card1 = new Card("8", "H");
+    const card2 = new Card("8", "S");
+
+    expect(battle(card1, card2)).toStrictEqual(
+        {
+            winningCard: 0,
+            draw: true
+        }
+    );
+})
