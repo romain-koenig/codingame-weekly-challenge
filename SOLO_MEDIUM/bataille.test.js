@@ -128,14 +128,18 @@ class Deck {
         }
         return deckDescription.join(" - ");
     }
+    addNewCard(card) {
+        this.#deck.push(card);
+    }
+
+    isEmpty() {
+        return this.#deck.length > 0 ? false : true;
+    }
 }
 
 const battle = (card1, card2) => {
     console.error(`Battle between Card1 : ${card1} - Card2 : ${card2}`);
     
-    console.error(`Card1.warValue - ${card1.warValue}`);
-    console.error(`Card2.warValue - ${card2.warValue}`);
-
     const winningCard = card1.warValue > card2.warValue ? 1 : (card2.warValue > card1.warValue ? 2 : 0);
     const draw = card1.warValue === card2.warValue ? true : false;
     return {
@@ -157,31 +161,46 @@ for (let i = 0; i < n; i++) {
     const card = readline().split(''); // the n cards of player 1
     const cardP1 = new Card(card[0], card[1]);
     startingDeck1.push(cardP1);
-    console.error(`Card P1 : ${cardP1.toString()}`);
 }
 const m = parseInt(readline()); // the number of cards for player 2
 for (let i = 0; i < m; i++) {
     const card = readline().split(''); // the m cards of player 2
     const cardP2 = new Card(card[0], card[1]);
     startingDeck2.push(new Card(card[0], card[1]));
-    console.error(`Card P2 : ${cardP2.toString()}`);
 }
-
 
 const deck1 = new Deck(startingDeck1.copyWithin());
 const deck2 = new Deck(startingDeck2.copyWithin());
 
 //GAME LOOP STARTS HERE
 
-gameOn = true;
+let gameOn = true;
+let turns = 1;
 while (gameOn) {
 
     console.error(deck1.toString());
+    console.error(deck2.toString());
+
     card1 = deck1.pioche();
     card2 = deck2.pioche();
-    console.error(deck1.toString());
 
-    gameOn = false;
+    const battleResult = battle(card1, card2);
+    if(battleResult.winningCard === 1) {
+        deck1.addNewCard(card1);
+        deck1.addNewCard(card2);
+    }
+    
+    if(battleResult.winningCard === 2) {
+        deck2.addNewCard(card1);
+        deck2.addNewCard(card2);
+    }
+
+    if (deck1.isEmpty() || deck2.isEmpty()) {
+        gameOn = false;
+        console.log(`${deck1.isEmpty() ? 2 : 1} ${turns}`)
+    }
+
+    turns++;
 }
 
 
@@ -207,12 +226,39 @@ test('Starting Deck - toString()', () => {
     expect(_deck1.toString()).toStrictEqual("Ace of Diamond - King of Club - Queen of Club");
 })
 
-
 test('Pioche : get the right card, have the right deck afterwards', () => {
     const deck = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
 
     expect(deck.pioche()).toStrictEqual(new Card('A', 'D'));
     expect(deck).toStrictEqual(new Deck([new Card('K', 'C'), new Card('Q', 'C')]));
+})
+
+test('GetNewCard : get the right card, have the right deck afterwards', () => {
+    const deck = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
+    const newCard = new Card("7", "H");
+    deck.addNewCard(newCard);
+    expect(deck).toStrictEqual(new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C'), new Card('7', 'H')]));
+})
+
+
+test('Deck isEmpty() - Should be false, 1 card left', () => {
+    const deck = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
+
+    deck.pioche();
+    deck.pioche();
+
+    expect(deck.isEmpty()).toBe(false);
+})
+
+
+test('Deck isEmpty() - Should be true', () => {
+    const deck = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
+
+    deck.pioche();
+    deck.pioche();
+    deck.pioche();
+
+    expect(deck.isEmpty()).toBe(true);
 })
 
 test('Battle - card1 should win', () => {
