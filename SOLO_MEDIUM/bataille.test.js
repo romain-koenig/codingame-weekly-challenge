@@ -57,14 +57,14 @@ const cardWarValues = {
 };
 
 const cardTextValues = {
-    2: "2,",
-    3: "3,",
-    4: "4,",
-    5: "5,",
-    6: "6,",
-    7: "7,",
-    8: "8,",
-    9: "9,",
+    2: "2",
+    3: "3",
+    4: "4",
+    5: "5",
+    6: "6",
+    7: "7",
+    8: "8",
+    9: "9",
     10: "10",
     J: "Jest",
     Q: "Queen",
@@ -73,10 +73,10 @@ const cardTextValues = {
 };
 
 const cardColors = {
-    C: "Club",
-    S: "Spade",
-    D: "Diamond",
-    H: "Heart"
+    C: "♣️",
+    S: "♠️",
+    D: "♦️",
+    H: "♥️"
 }
 
 
@@ -94,7 +94,7 @@ class Card {
     }
 
     toString() {
-        return `${this.faceValue} of ${this.color}`;
+        return `${this.faceValue}${this.color}`;
     }
 }
 
@@ -114,7 +114,7 @@ class Deck {
 
     discard(number) {
         for (let i = 0; i < number; i++) {
-            this.#defausse.push(this.#deck.pop());
+            this.#defausse.push(this.#deck.shift());
         }
     }
 
@@ -139,7 +139,7 @@ class Deck {
 
 const battle = (card1, card2) => {
     console.error(`Battle between Card1 : ${card1} - Card2 : ${card2}`);
-    
+
     const winningCard = card1.warValue > card2.warValue ? 1 : (card2.warValue > card1.warValue ? 2 : 0);
     const draw = card1.warValue === card2.warValue ? true : false;
     return {
@@ -185,12 +185,12 @@ while (gameOn) {
     card2 = deck2.pioche();
 
     const battleResult = battle(card1, card2);
-    if(battleResult.winningCard === 1) {
+    if (battleResult.winningCard === 1) {
         deck1.addNewCard(card1);
         deck1.addNewCard(card2);
     }
-    
-    if(battleResult.winningCard === 2) {
+
+    if (battleResult.winningCard === 2) {
         deck2.addNewCard(card1);
         deck2.addNewCard(card2);
     }
