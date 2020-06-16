@@ -265,7 +265,7 @@ while (gameOn) {
     }
 
     if (battleResult.draw) {
-        if (deck1.deck.length < 4 || deck1.deck.length < 4) {
+        if (deck1.deck.length < 4 || deck2.deck.length < 4) {
             gameOn = false;
             console.log(`PAT`)
 
