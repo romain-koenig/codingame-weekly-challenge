@@ -151,6 +151,10 @@ class Deck {
         }
     }
 
+    flush() {
+        this.defausse = [];
+    }
+
     discardThree() {
         this.discard(3);
     }
@@ -199,7 +203,7 @@ const n = parseInt(readline()); // the number of cards for player 1
 for (let i = 0; i < n; i++) {
     const card = readline().split(''); // the n cards of player 1
     if (card.length === 3) {
-        startingDeck1.push(new Card(card[0]+card[1], card[2]));
+        startingDeck1.push(new Card(card[0] + card[1], card[2]));
     }
     else {
         startingDeck1.push(new Card(card[0], card[1]));
@@ -233,17 +237,17 @@ while (gameOn) {
 
     const battleResult = battle(card1, card2);
     if (battleResult.winningCard === 1) {
-        deck1.addNewCard(card1);
-        deck1.addNewCard(card2);
+        deck1.addNewCards(deck1.defausse);
+        deck1.flush();
+        deck1.addNewCards(deck2.defausse);
+        deck2.flush();
     }
 
     if (battleResult.winningCard === 2) {
-        deck2.addNewCard(card1);
-        deck2.addNewCard(card2);
-    }
-
-    if (battleResult.draw) {
-        
+        deck2.addNewCards(deck1.defausse);
+        deck1.flush()
+        deck2.addNewCards(deck2.defausse);
+        deck2.flush();
     }
 
     if (deck1.isEmpty() || deck2.isEmpty()) {
@@ -251,10 +255,19 @@ while (gameOn) {
         console.log(`${deck1.isEmpty() ? 2 : 1} ${turns}`)
     }
 
+    if (battleResult.draw) {
+        if (deck1.deck.length < 4 || deck1.deck.length < 4) {
+            gameOn = false;
+            console.log(`PAT`)
+
+        }
+        deck1.discardThree();
+        deck2.discardThree();
+        turns--;
+    }
+
     turns++;
 }
-
-
 
 // ███████╗███╗   ██╗██████╗ 
 // ██╔════╝████╗  ██║██╔══██╗
@@ -263,15 +276,12 @@ while (gameOn) {
 // ███████╗██║ ╚████║██████╔╝
 // ╚══════╝╚═╝  ╚═══╝╚═════╝ 
 
-
-
 const test = () => { return "" };
 
 test('DOING NOTHING - JEST needs at least ONE test', () => {
     expect(true).toBe(true);
 }
 )
-
 
 test('Starting Deck - toString()', () => {
     const _deck1 = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
