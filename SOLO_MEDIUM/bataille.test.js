@@ -1,31 +1,63 @@
 let line = 0;
+
 const readline = () => {
     line++;
+
     switch (line) {
-        case 1:
-            return "3";
-            break;
-        case 2:
-            return "AD";
-            break;
-        case 3:
-            return "KC";
-            break;
-        case 4:
-            return "QC";
-            break;
-        case 5:
-            return "3";
-            break;
-        case 6:
-            return "KH";
-            break;
-        case 7:
-            return "QS";
-            break;
-        case 8:
-            return "JC";
-            break;
+        case 1: return "26"; break;
+        case 2: return "6H"; break;
+        case 3: return "7H"; break;
+        case 4: return "6C"; break;
+        case 5: return "QS"; break;
+        case 6: return "7S"; break;
+        case 7: return "8D"; break;
+        case 8: return "6D"; break;
+        case 9: return "5S"; break;
+        case 10: return "6S"; break;
+        case 11: return "QH"; break;
+        case 12: return "4D"; break;
+        case 13: return "3S"; break;
+        case 14: return "7C"; break;
+        case 15: return "3C"; break;
+        case 16: return "4S"; break;
+        case 17: return "5H"; break;
+        case 18: return "QD"; break;
+        case 19: return "5C"; break;
+        case 20: return "3H"; break;
+        case 21: return "3D"; break;
+        case 22: return "8C"; break;
+        case 23: return "4H"; break;
+        case 24: return "4C"; break;
+        case 25: return "QC"; break;
+        case 26: return "5D"; break;
+        case 27: return "7D"; break;
+        case 28: return "26"; break;
+        case 29: return "JH"; break;
+        case 30: return "AH"; break;
+        case 31: return "KD"; break;
+        case 32: return "AD"; break;
+        case 33: return "9C"; break;
+        case 34: return "2D"; break;
+        case 35: return "2H"; break;
+        case 36: return "JC"; break;
+        case 37: return "10H"; break;
+        case 38: return "KC"; break;
+        case 39: return "10C"; break;
+        case 40: return "JS"; break;
+        case 41: return "JD"; break;
+        case 42: return "9D"; break;
+        case 43: return "9S"; break;
+        case 44: return "KS"; break;
+        case 45: return "AS"; break;
+        case 46: return "KH"; break;
+        case 47: return "10D"; break;
+        case 48: return "8S"; break;
+        case 49: return "2S"; break;
+        case 50: return "10S"; break;
+        case 51: return "8H"; break;
+        case 52: return "AC"; break;
+        case 53: return "2C"; break;
+        case 54: return "9H"; break;
         default:
             break;
     }
@@ -99,22 +131,23 @@ class Card {
 }
 
 class Deck {
-    #deck = [];
-    #defausse = [];
-    #cardInGame = null;
+    deck = [];
+    defausse = [];
+    cardInGame = null;
 
     constructor(deck) {
-        this.#deck = deck;
+        this.deck = deck;
     }
 
     pioche() {
-        this.#cardInGame = this.#deck.shift();
-        return this.#cardInGame;
+        this.cardInGame = this.deck.shift();
+        this.defausse.push(this.cardInGame)
+        return this.cardInGame;
     }
 
     discard(number) {
         for (let i = 0; i < number; i++) {
-            this.#defausse.push(this.#deck.shift());
+            this.defausse.push(this.deck.shift());
         }
     }
 
@@ -123,17 +156,23 @@ class Deck {
     }
     toString() {
         let deckDescription = [];
-        for (let i = 0; i < this.#deck.length; i++) {
-            deckDescription.push(this.#deck[i]);
+        for (let i = 0; i < this.deck.length; i++) {
+            deckDescription.push(this.deck[i]);
         }
         return deckDescription.join(" - ");
     }
     addNewCard(card) {
-        this.#deck.push(card);
+        this.deck.push(card);
+    }
+
+    addNewCards(cards) {
+        for (let i = 0; i < cards.length; i++) {
+            this.addNewCard(cards[i]);
+        }
     }
 
     isEmpty() {
-        return this.#deck.length > 0 ? false : true;
+        return this.deck.length > 0 ? false : true;
     }
 }
 
@@ -159,14 +198,22 @@ const startingDeck2 = [];
 const n = parseInt(readline()); // the number of cards for player 1
 for (let i = 0; i < n; i++) {
     const card = readline().split(''); // the n cards of player 1
-    const cardP1 = new Card(card[0], card[1]);
-    startingDeck1.push(cardP1);
+    if (card.length === 3) {
+        startingDeck1.push(new Card(card[0]+card[1], card[2]));
+    }
+    else {
+        startingDeck1.push(new Card(card[0], card[1]));
+    }
 }
 const m = parseInt(readline()); // the number of cards for player 2
 for (let i = 0; i < m; i++) {
     const card = readline().split(''); // the m cards of player 2
-    const cardP2 = new Card(card[0], card[1]);
-    startingDeck2.push(new Card(card[0], card[1]));
+    if (card.length === 3) {
+        startingDeck2.push(new Card(card[0] + card[1], card[2]));
+    }
+    else {
+        startingDeck2.push(new Card(card[0], card[1]));
+    }
 }
 
 const deck1 = new Deck(startingDeck1.copyWithin());
@@ -195,6 +242,10 @@ while (gameOn) {
         deck2.addNewCard(card2);
     }
 
+    if (battleResult.draw) {
+        
+    }
+
     if (deck1.isEmpty() || deck2.isEmpty()) {
         gameOn = false;
         console.log(`${deck1.isEmpty() ? 2 : 1} ${turns}`)
@@ -214,6 +265,7 @@ while (gameOn) {
 
 
 
+const test = () => { return "" };
 
 test('DOING NOTHING - JEST needs at least ONE test', () => {
     expect(true).toBe(true);
@@ -223,40 +275,47 @@ test('DOING NOTHING - JEST needs at least ONE test', () => {
 
 test('Starting Deck - toString()', () => {
     const _deck1 = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
-    expect(_deck1.toString()).toStrictEqual("Ace of Diamond - King of Club - Queen of Club");
+    expect(_deck1.toString()).toStrictEqual("Ace♦️ - King♣️ - Queen♣️");
 })
 
 test('Pioche : get the right card, have the right deck afterwards', () => {
     const deck = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
 
-    expect(deck.pioche()).toStrictEqual(new Card('A', 'D'));
-    expect(deck).toStrictEqual(new Deck([new Card('K', 'C'), new Card('Q', 'C')]));
+    const retrievedCard = new Card('A', 'D');
+    expect(deck.pioche()).toStrictEqual(retrievedCard);
+    expect(deck.deck).toStrictEqual([new Card('K', 'C'), new Card('Q', 'C')]);
+    expect(deck.defausse).toStrictEqual([retrievedCard]);
 })
 
-test('GetNewCard : get the right card, have the right deck afterwards', () => {
+test('AddNewCard : have the right deck afterwards', () => {
     const deck = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
     const newCard = new Card("7", "H");
     deck.addNewCard(newCard);
     expect(deck).toStrictEqual(new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C'), new Card('7', 'H')]));
 })
-
+test('AddNewCards : have the right deck afterwards', () => {
+    const deck = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
+    const newCards = [new Card("7", "H"), new Card("2", "C")];
+    deck.addNewCards(newCards);
+    expect(deck).toStrictEqual(new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C'), new Card('7', 'H'), new Card("2", "C")]));
+})
 
 test('Deck isEmpty() - Should be false, 1 card left', () => {
     const deck = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
 
-    deck.pioche();
-    deck.pioche();
+    for (let i = 0; i < 2; i++) {
+        deck.pioche();
+    }
 
     expect(deck.isEmpty()).toBe(false);
 })
 
-
 test('Deck isEmpty() - Should be true', () => {
     const deck = new Deck([new Card('A', 'D'), new Card('K', 'C'), new Card('Q', 'C')]);
 
-    deck.pioche();
-    deck.pioche();
-    deck.pioche();
+    for (let i = 0; i < 3; i++) {
+        deck.pioche();
+    }
 
     expect(deck.isEmpty()).toBe(true);
 })
