@@ -46,17 +46,6 @@ class TrafficLight {
 
 }
 
-//Utilities
-
-const kmhToMs = (v) => {
-    // console.error(`kmhToMs(${v}) => ${v * 1000 / 3600}`)
-    return v * 1000 / 3600;
-}
-const timeToGetTo = (d, v) => {
-    // console.error(`timeToGetTo(${d}, ${v}) => ${d / v}`)
-    return d / v;
-}
-
 //Starting Game loop
 
 const maxSpeed = parseInt(readline());
@@ -77,8 +66,11 @@ let currentSpeed = 0;
 
 
 for (currentSpeed = maxSpeed; solved == false && currentSpeed > 0; currentSpeed--) {
+    if (currentSpeed === 60) {
+        console.error(`This should be OK`);
+    }
     //t(s)=d(m)/v(m/s)
-    solved = trafficLights.map(tl => tl.isGreen(timeToGetTo(tl.position, kmhToMs(currentSpeed)))).reduce((a, e) => a && e);
+    solved = trafficLights.map(tl => tl.isGreen(36 * tl.position / (10 * currentSpeed))).reduce((a, e) => a && e);
 }
 
 // Write an answer using console.log()
