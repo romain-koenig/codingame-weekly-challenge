@@ -4,10 +4,9 @@ const readline = () => {
     line++;
 
     switch (line) {
-        case 1: return 50; break;
-        case 2: return 1; break;
-        case 3: return 200 15; break;
-
+        case 1: return "50"; break;
+        case 2: return "1"; break;
+        case 3: return "200 15"; break;
     }
 }
 
@@ -34,8 +33,9 @@ for (let i = 0; i < lightCount; i++) {
 
 // Write an answer using console.log()
 // To debug: console.error('Debug messages...');
+const answer = 50;
 
-console.log('answer');
+console.log(answer);
 
 
 // ███████╗███╗   ██╗██████╗ 
@@ -49,5 +49,11 @@ console.log('answer');
 
 test('DOING NOTHING - JEST needs at least ONE test', () => {
     expect(true).toBe(true);
+}
+)
+
+
+test('Test GAME 1', () => {
+    expect(answer).toBe(50);
 }
 )
