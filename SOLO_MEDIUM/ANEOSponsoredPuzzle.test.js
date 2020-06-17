@@ -4,9 +4,14 @@ const readline = () => {
     line++;
 
     switch (line) {
-        case 1: return "50"; break;
-        case 2: return "1"; break;
-        case 3: return "200 15"; break;
+        case 1: return "200"; break;
+        case 2: return "6"; break;
+        case 3: return "1000 15"; break;
+        case 4: return "3000 10"; break;
+        case 5: return "4000 30"; break;
+        case 6: return "5000 30"; break;
+        case 7: return "6000 5"; break;
+        case 8: return "7000 10"; break;
     }
 }
 
@@ -34,7 +39,7 @@ class TrafficLight {
         // red during duration and 2 * duration
         // 2 * duration and 3 * duration
         // and so on...
-        console.error(`Time : ${time}`)
+        // console.error(`Time : ${time}`)
         const cycleNumber = Math.floor(time / this.duration);
         return cycleNumber % 2 === 0;
     }
@@ -44,11 +49,11 @@ class TrafficLight {
 //Utilities
 
 const kmhToMs = (v) => {
-    console.error(`kmhToMs(${v}) => ${v * 1000 / 3600}`)
+    // console.error(`kmhToMs(${v}) => ${v * 1000 / 3600}`)
     return v * 1000 / 3600;
 }
 const timeToGetTo = (d, v) => {
-    console.error(`timeToGetTo(${d}, ${v}) => ${d / v}`)
+    // console.error(`timeToGetTo(${d}, ${v}) => ${d / v}`)
     return d / v;
 }
 
@@ -100,12 +105,14 @@ test('Testing a Traffic light under different conditions', () => {
     tl = new TrafficLight(10, 40);
     expect(tl.isGreen(10)).toBe(true);
     expect(tl.isGreen(30)).toBe(true);
+    expect(tl.isGreen(39.9999)).toBe(true);
+    expect(tl.isGreen(40.0001)).toBe(false);
     expect(tl.isGreen(50)).toBe(false);
 
 }
 )
 
-test('Test GAME 1', () => {
-    expect(answer).toBe(50);
+test('Test GAME 07', () => {
+    expect(answer).toBe(60);
 }
 )
