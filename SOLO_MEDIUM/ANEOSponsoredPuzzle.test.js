@@ -17,11 +17,19 @@ const readline = () => {
 // ██████╔╝███████╗╚██████╔╝██║██║ ╚████║
 // ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝
    
+class TrafficLight {
+    position = 0;
+    duration = 0;
+    constructor(position, duration) {
+        this.position = position;
+        this.duration = duration;
+    }
 
-/**
- * Auto-generated code below aims at helping you parse
- * the standard input according to the problem statement.
- **/
+    isGreen(time) {
+        return true;
+    }
+    
+}
 
 const speed = parseInt(readline());
 const lightCount = parseInt(readline());
@@ -52,6 +60,12 @@ test('DOING NOTHING - JEST needs at least ONE test', () => {
 }
 )
 
+test('Testing a Traffic light under different conditions', () => {
+    tl = new TrafficLight(10, 20);
+    expect(tl.isGreen(10)).toBe(true);
+
+}
+)
 
 test('Test GAME 1', () => {
     expect(answer).toBe(50);
