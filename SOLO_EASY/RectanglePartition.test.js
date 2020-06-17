@@ -38,50 +38,54 @@ inputs = readline().split(' ');
 console.error(inputs.join(' '));
 
 
-const widths = [];
-widths.push(0);
+const verticalLines = [];
+verticalLines.push(0);
 for (let i = 0; i < countX; i++) {
     const x = parseInt(inputs[i]);
-    widths.push(x);
+    verticalLines.push(x);
 
 }
-widths.push(w);
+verticalLines.push(w);
 
 inputs = readline().split(' ');
 console.error(inputs.join(' '));
-const heights = [];
-heights.push(0);
+const horizontalLines = [];
+horizontalLines.push(0);
 for (let i = 0; i < countY; i++) {
     const y = parseInt(inputs[i]);
-    heights.push(y);
+    horizontalLines.push(y);
 
 }
-heights.push(h);
-
-console.error(widths.join(' '));
-console.error(heights.join(' '));
+horizontalLines.push(h);
 
 let answer = 0;
 
-for (let i = 0; i < widths.length; i++) {
-    for (let j = 0; j < heights.length; j++) {
-        // here we check every "starting point"
-        for (let k = 1; k < widths.length - i; k++) {
-            for (let l = 1; l < heights.length - j; l++) {
-                // here we determine every ending point
+const widths = [];
+const heights = [];
 
-                const currentWidth = widths[i + k] - widths[i];
-                const currentHeight = heights[j + l] - heights[j];
-
-
-                console.error(`checking square starting in ${i}, ${j} and ending in ${i + k}, ${j + l} : ${currentWidth} x ${currentHeight}`);
-
-                answer += currentWidth === currentHeight ? 1 : 0;
-
-            }
-        }
+for (let i = 0; i < verticalLines.length - 1; i++) {
+    for (let k = 1; k < verticalLines.length - i; k++) {
+        currentWidth = verticalLines[i + k] - verticalLines[i];
+        console.error(`checking between vertical line ${i} and ${i + k} (current width = ${currentWidth})`);
+        widths.push(currentWidth);
     }
 }
+
+
+for (let j = 0; j < horizontalLines.length - 1; j++) {
+    for (let l = 1; l < horizontalLines.length - j; l++) {
+        currentHeight = horizontalLines[j + l] - horizontalLines[j];
+        console.error(`checking between horizontal line ${j} and ${j + l} (current width = ${currentHeight})`);
+        heights.push(currentHeight);
+    }
+}
+
+for (let index = 0; index < widths.length; index++) {
+    const correspondances = heights.filter(w => w === widths[index]).length;
+    answer += correspondances;
+    console.error(`${index} - Width = ${widths[index]} - Found ${correspondances} correspondance(s)`)
+}
+
 // Write an answer using console.log()
 // To debug: console.error('Debug messages...');
 
