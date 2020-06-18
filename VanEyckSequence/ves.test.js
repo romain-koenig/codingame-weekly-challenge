@@ -5,7 +5,7 @@ const readline = () => {
 
     switch (line) {
         case 1: return "0"; break;
-        case 2: return "2"; break;
+        case 2: return "15"; break;
     }
 }
 
@@ -15,14 +15,33 @@ const readline = () => {
 // ██╔══██╗██╔══╝  ██║   ██║██║██║╚██╗██║
 // ██████╔╝███████╗╚██████╔╝██║██║ ╚████║
 // ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝
-                                      
+
 
 const A1 = parseInt(readline());
 const N = parseInt(readline());
 
-const tab = [0,0,1,0];
+let next = A1;
 
-console.log(tab[N]);
+const tab = [];
+for (let i = 0; i < N; i++) {
+    next = addAValue(next);
+}
+
+console.error(tab);
+
+
+console.log(tab[N - 1]);
+
+
+function addAValue(val) {
+    let returnValue = tab.filter(e => e === val).length;
+    if (returnValue != 0) {
+        returnValue = tab.length - tab.lastIndexOf(val);
+    }
+    tab.push(val);
+    return returnValue;
+}
+
 
 
 // ███████╗███╗   ██╗██████╗ 
@@ -31,8 +50,10 @@ console.log(tab[N]);
 // ██╔══╝  ██║╚██╗██║██║  ██║
 // ███████╗██║ ╚████║██████╔╝
 // ╚══════╝╚═╝  ╚═══╝╚═════╝ 
-                          
+
+const test = () => {}
 
 test('GAME 01', () => {
-    expect(tab[N-1]).toBe(0);
+    expect(tab[1]).toBe(0);
 })
+
