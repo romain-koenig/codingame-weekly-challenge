@@ -102,7 +102,6 @@ console.log(answer);
 // ███████╗██║ ╚████║██████╔╝
 // ╚══════╝╚═╝  ╚═══╝╚═════╝ 
 
-const test = () => { "" }
 test('Final test of Game 01', () => {
     expect(answer).toBe(4);
 })
