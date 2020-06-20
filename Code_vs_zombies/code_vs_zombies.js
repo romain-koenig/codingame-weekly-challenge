@@ -42,7 +42,7 @@ exports.computeDistance = computeDistance;
 
 
 
-let count = 300;
+let count = 3;
 
 class Character {
     #position = null;
