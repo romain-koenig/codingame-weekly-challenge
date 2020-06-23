@@ -5,27 +5,7 @@ const readline = () => {
         case 1:
             return "3 3";
             break;
-        case 2:
-            return "0 3 0";
-            break;
-        case 3:
-            return "0 3 0";
-            break;
-        case 4:
-            return "0 3 0";
-            break;
-        case 5:
-            return "1";
-            break;
-        case 6:
-            return "1 0 TOP";
-            break;
-        case 7:
-            return "1 1 TOP";
-            break;
-        case 8:
-            return "1 2 TOP";
-            break;
+
 
         default:
             return "TOO FAR !";
@@ -36,7 +16,7 @@ const readline = () => {
 
 /**
  * CODINGAME : 
- * https://www.codingame.com/ide/puzzle/the-last-crusade-episode-1
+ * https://www.codingame.com/ide/puzzle/the-last-crusade-episode-2
  **/
 
 // ██╗   ██╗████████╗██╗██╗     ██╗████████╗██╗███████╗███████╗
@@ -106,6 +86,8 @@ const tileTypes = {
 }
 
 
+
+
 const computeNextPosition = (gameGrid, X, Y, currentDirection) => {
 
     const tileType = gameGrid[Y][X];
@@ -113,13 +95,16 @@ const computeNextPosition = (gameGrid, X, Y, currentDirection) => {
     const nextTileDirection = tileTypes[tileType].get(currentDirection);
     switch (nextTileDirection) {
         case DIRECTIONS.DOWN:
-            console.log(`${X} ${Y+1}`);
+            return new Position(X, Y + 1);
+            // console.log(`${X} ${Y+1}`);
             break;
         case DIRECTIONS.LEFT:
-            console.log(`${X-1} ${Y}`);
+            return new Position(X - 1, Y);
+            // console.log(`${X-1} ${Y}`);
             break;
         case DIRECTIONS.RIGHT:
-            console.log(`${X+1} ${Y}`);
+            return new Position(X + 1, Y);
+            // console.log(`${X+1} ${Y}`);
             break;
 
         default:
@@ -150,15 +135,12 @@ for (let i = 0; i < H; i++) {
 
 console.error(gameGrid);
 
-
-
 const EX = parseInt(readline()); // the coordinate along the X axis of the exit (not useful for this first mission, but must be read).
-
 
 // game loop
 let count = 10000;
 while (true && count > 0) {
-    count--
+    count--;
     var inputs = readline().split(' ');
     console.error(inputs);
     const XI = parseInt(inputs[0]);
@@ -168,10 +150,7 @@ while (true && count > 0) {
 
     const nextPosition = computeNextPosition(gameGrid, XI, YI, POS);
 
-
-    // Write an action using console.log()
-    // To debug: console.error('Debug messages...');
-
+    console.log(`${nextPosition.getX()} ${nextPosition.getY()}`)
 
     // One line containing the X Y coordinates of the room in which you believe Indy will be on the next turn.
     //console.log(nextPosition.getX() + " " +nextPosition.getY());
