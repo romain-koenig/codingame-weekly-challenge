@@ -1,8 +1,3 @@
-/**
- * Auto-generated code below aims at helping you parse
- * the standard input according to the problem statement.
- **/
-
 const gameGrid = [];
 
 for (let i = 0; i < 9; i++) {
@@ -15,28 +10,37 @@ for (let i = 0; i < 9; i++) {
     gameGrid.push(gameLine);
 }
 
-console.error(gameGrid);
-
 let gameOK = true;
 for (let i = 0; i < gameGrid.length && gameOK === true; i++) {
-    let somme = 0;
-    for (let j = 0; j < gameGrid[j].length; j++) {
-        somme += gameGrid[i][j];
-
+    let numbers = [];
+    for (let j = 0; j < gameGrid[i].length; j++) {
+        numbers.push(gameGrid[i][j]);
     }
-    if (somme !== 9) {
+    if (numbers.sort().toString() !== [1, 2, 3, 4, 5, 6, 7, 8, 9].toString()) {
         gameOK = false;
     }
 }
 
 for (let i = 0; i < gameGrid.length && gameOK === true; i++) {
-    let somme = 0;
-    for (let j = 0; j < gameGrid[j].length; j++) {
-        somme += gameGrid[j][i];
-
+    let numbers = [];
+    for (let j = 0; j < gameGrid[i].length; j++) {
+        numbers.push(gameGrid[j][i]);
     }
-    if (somme !== 9) {
+    if (numbers.sort().toString() !== [1, 2, 3, 4, 5, 6, 7, 8, 9].toString()) {
         gameOK = false;
+    }
+}
+for (let i = 0; i < 3; i++) {
+    for (let k = 0; k < 3; k++) {
+        let numbers = [];
+        for (let j = 1; j <= 3; j++) {
+            for (let l = 1; l <= 3; l++) {
+                numbers.push(gameGrid[3 * i + j - 1][3 * k + l - 1]);
+            }
+        }
+        if (numbers.sort().toString() !== [1, 2, 3, 4, 5, 6, 7, 8, 9].toString()) {
+            gameOK = false;
+        }
     }
 }
 
